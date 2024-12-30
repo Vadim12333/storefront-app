@@ -3,6 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView, Platform } from 'react-native';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { Image, Spinner, XStack, Text, YStack, useTheme } from 'tamagui';
+import { LinearGradient } from 'react-native-linear-gradient';
 import { setI18nConfig } from '../utils/localize';
 import { config } from '../utils';
 import BootSplash from 'react-native-bootsplash';
@@ -78,6 +79,17 @@ const BootScreen = () => {
                 <XStack mt='$2' alignItems='center' justifyContent='center' space='$3'>
                     <Spinner size='small' color='$textSecondary' />
                 </XStack>
+                <LinearGradient
+                    colors={['#f67d04', '#ff3a44']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 0, y: 1 }}
+                    style={{
+                        position: 'absolute',
+                        bottom: 0,
+                        height: '100%',
+                        width: '100%',
+                    }}
+                />
             </YStack>
         </SafeAreaView>
     );
