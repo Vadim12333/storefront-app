@@ -22,8 +22,38 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>$(APP_IDENTIFIER)</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>$(APP_LINK_PREFIX)</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>qpaywallet</string>
+		<string>khanbank</string>
+		<string>statebankmongolia</string>
+		<string>xacbank</string>
+		<string>tdbbank</string>
+		<string>socialpay-payment</string>
+		<string>most</string>
+		<string>nibank</string>
+		<string>ckbank</string>
+		<string>capitronbank</string>
+		<string>bogdbank</string>
+		<string>transbank</string>
+		<string>mbank</string>
+		<string>ard</string>
+		<string>arig</string>
+		<string>Monpay</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -55,40 +85,13 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleURLName</key>
-			<string>$(APP_IDENTIFIER)</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>$(APP_LINK_PREFIX)</string>
-			</array>
-		</dict>
-	</array>
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-		<string>qpaywallet</string>
-		<string>khanbank</string>
-		<string>statebankmongolia</string>
-		<string>xacbank</string>
-		<string>tdbbank</string>
-		<string>socialpay-payment</string>
-		<string>most</string>
-		<string>nibank</string>
-		<string>ckbank</string>
-		<string>capitronbank</string>
-		<string>bogdbank</string>
-		<string>transbank</string>
-		<string>mbank</string>
-		<string>ard</string>
-		<string>arig</string>
-		<string>Monpay</string>
-	</array>
 	<key>NSCameraUsageDescription</key>
 	<string>This app may need to use your camera for your profile picture</string>
 	<key>NSContactsUsageDescription</key>
 	<string>This app may need to access your contacts for sharing</string>
+	<key>NSLocalUsageDescription</key>
+	<string>This app requires access to send you notifications about order status updates and
+	other important information.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>This app requires access to your location to provide create user address for order
 	when the app is in use</string>
@@ -98,9 +101,6 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This app requires access to your location to provide create user address for order
 	when the app is in use</string>
-	<key>NSLocalUsageDescription</key>
-	<string>This app requires access to send you notifications about order status updates and
-	other important information.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app allows you to upload photos from your photo library</string>
 	<key>UIBackgroundModes</key>
