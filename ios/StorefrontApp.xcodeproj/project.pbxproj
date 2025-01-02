@@ -47,6 +47,7 @@
 		9E34BFD2823E183C21712D32 /* Pods-StorefrontApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StorefrontApp.release.xcconfig"; path = "Target Support Files/Pods-StorefrontApp/Pods-StorefrontApp.release.xcconfig"; sourceTree = "<group>"; };
 		AC401756DB42631CCF315151 /* Pods-StorefrontApp-StorefrontAppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StorefrontApp-StorefrontAppTests.debug.xcconfig"; path = "Target Support Files/Pods-StorefrontApp-StorefrontAppTests/Pods-StorefrontApp-StorefrontAppTests.debug.xcconfig"; sourceTree = "<group>"; };
 		DDC2F92FE8B66CBD1F7E3B8B /* Pods-StorefrontApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StorefrontApp.debug.xcconfig"; path = "Target Support Files/Pods-StorefrontApp/Pods-StorefrontApp.debug.xcconfig"; sourceTree = "<group>"; };
+		E458C8E62D1D857700DF0667 /* StorefrontApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = StorefrontApp.entitlements; path = StorefrontApp/StorefrontApp.entitlements; sourceTree = "<group>"; };
 		E4AFEC652CF6BA4C000EDE15 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		E4CDF7802CE20AF900D34FBB /* BootSplash.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = BootSplash.storyboard; path = StorefrontApp/BootSplash.storyboard; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -92,6 +93,7 @@
 		13B07FAE1A68108700A75B9A /* StorefrontApp */ = {
 			isa = PBXGroup;
 			children = (
+				E458C8E62D1D857700DF0667 /* StorefrontApp.entitlements */,
 				E4CDF7802CE20AF900D34FBB /* BootSplash.storyboard */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
@@ -477,9 +479,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = StorefrontApp/StorefrontApp.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = W4M54N7H85;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = StorefrontApp/Info.plist;
@@ -510,9 +513,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = StorefrontApp/StorefrontApp.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = W4M54N7H85;
 				INFOPLIST_FILE = StorefrontApp/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "True Vegan";
