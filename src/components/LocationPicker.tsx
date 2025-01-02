@@ -94,7 +94,7 @@ const LocationPicker = ({
                     style={StyleSheet.absoluteFillObject}
                     blurType={isDarkMode ? 'dark' : 'light'}
                     blurAmount={10}
-                    borderRadius={10}
+                    borderRadius={20}
                     reducedTransparencyFallbackColor='rgba(255, 255, 255, 0.8)'
                 />
                 <XStack alignItems='center' space='$1' style={triggerStyle} {...triggerProps}>
@@ -195,8 +195,8 @@ const LocationPicker = ({
                                     }}
                                 >
                                     <XStack mb='$1' padding='$2'>
-                                        <FontAwesomeIcon icon={faPlus} size={16} style={{ marginRight: 6 }} />
-                                        <Text color='$primaryColor'>Add New Location</Text>
+                                        <FontAwesomeIcon icon={faPlus} size={16} color={theme.textPrimary.val} style={{ marginRight: 6 }} />
+                                        <Text color='$textPrimary'>Add New Location</Text>
                                     </XStack>
                                 </Pressable>
                             </YStack>
