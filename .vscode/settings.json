@@ -10,7 +10,7 @@
     "editor.formatOnType": false,
     "prettier.configPath": ".prettierrc",
     "prettier.ignorePath": ".prettierignore",
-    "[shellscript]": {
+    "[dotenv]": {
         "editor.defaultFormatter": "foxundermoon.shell-format"
     }
 }

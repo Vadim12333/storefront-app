@@ -487,6 +487,7 @@
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = StorefrontApp/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "True Vegan";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.shopping";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -520,6 +521,7 @@
 				DEVELOPMENT_TEAM = W4M54N7H85;
 				INFOPLIST_FILE = StorefrontApp/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "True Vegan";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.shopping";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
