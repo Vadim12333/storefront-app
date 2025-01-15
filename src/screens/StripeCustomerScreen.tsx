@@ -1,10 +1,12 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { SafeAreaView } from 'react-native';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
+import { Animated } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Button, Text, YStack, XStack, Spinner, useTheme } from 'tamagui';
 import { useAuth } from '../contexts/AuthContext';
-import { CustomerSheetBeta, CustomerSheetError, initStripe } from '@stripe/stripe-react-native';
+import { CustomerSheet, CustomerSheetError, initStripe } from '@stripe/stripe-react-native';
+import { Portal } from '@gorhom/portal';
 import { config } from '../utils';
+import useAppTheme from '../hooks/use-app-theme';
 
 const APP_IDENTIFIER = config('APP_IDENTIFIER');
 const STRIPE_KEY = config('STRIPE_KEY');
@@ -12,9 +14,13 @@ const STRIPE_KEY = config('STRIPE_KEY');
 const StripeCustomerScreen = () => {
     const theme = useTheme();
     const navigation = useNavigation();
+    const { isDarkMode } = useAppTheme();
     const { customer, updateCustomerMeta } = useAuth();
     const [customerSheetReady, setCustomerSheetReady] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+
+    // Animated value for sliding the panel
+    const slideAnim = useRef(new Animated.Value(300)).current;
 
     useEffect(() => {
         if (!customer || customerSheetReady) {
@@ -24,14 +30,15 @@ const StripeCustomerScreen = () => {
         // Initialize the customer sheet
         const initializeCustomerSheet = async () => {
             try {
-                const { setupIntent } = await customer.getStripeSetupIntent();
+                const { setupIntent, customerId } = await customer.getStripeSetupIntent();
                 const { ephemeralKey } = await customer.getStripeEphemeralKey();
-                const { error } = await CustomerSheetBeta.initialize({
+                const { error } = await CustomerSheet.initialize({
                     setupIntentClientSecret: setupIntent,
                     customerEphemeralKeySecret: ephemeralKey,
-                    customerId: customer.getAttribute('meta.stripe_id'),
+                    customerId,
                     headerTextForSelectionScreen: 'Manage your payment method',
                     returnURL: `${APP_IDENTIFIER}://stripe-customer`,
+                    style: isDarkMode ? 'alwaysDark' : 'alwaysLight',
                 });
 
                 if (error) {
@@ -40,6 +47,7 @@ const StripeCustomerScreen = () => {
                 }
 
                 setCustomerSheetReady(true);
+                setIsLoading(false);
             } catch (err) {
                 console.error('Error initializing stripe customer sheet:', err);
                 return navigation.goBack();
@@ -63,7 +71,7 @@ const StripeCustomerScreen = () => {
     useEffect(() => {
         const showCustomerSheet = async () => {
             try {
-                const { error, paymentMethod } = await CustomerSheetBeta.present();
+                const { error, paymentMethod } = await CustomerSheet.present();
                 if (error) {
                     if (error.code === CustomerSheetError.Canceled) {
                         return navigation.goBack();
@@ -85,34 +93,64 @@ const StripeCustomerScreen = () => {
         }
     }, [customerSheetReady]);
 
+    // Animate panel into view
+    useEffect(() => {
+        if (isLoading) {
+            Animated.timing(slideAnim, {
+                toValue: 0,
+                duration: 700,
+                useNativeDriver: true,
+            }).start();
+        }
+    }, [isLoading]);
+
     return (
-        <SafeAreaView style={{ flex: 1 }}>
-            <YStack bg='transparent' width='100%' height='100%' justifyContent='flex-end' px='$1'>
-                <YStack
-                    height={150}
-                    width='100%'
-                    bg='$surface'
-                    alignItems='center'
-                    justifyContent='center'
-                    padding='$4'
-                    borderWidth={1}
-                    borderBottomWidth={0}
-                    borderColor='$borderColorWithShadow'
-                    borderTopRightRadius={20}
-                    borderTopLeftRadius={20}
-                    shadowColor='$shadowColor'
-                    shadowOffset={{ width: 0, height: 1 }}
-                    shadowRadius={3}
-                    shadowOpacity={0.25}
-                    opacity={customerSheetReady ? 0 : 1}
-                >
-                    <XStack space='$2'>
-                        <Spinner />
-                        <Text color='$textPrimary'>Loading payment methods...</Text>
-                    </XStack>
+        <Portal hostName='MainPortal'>
+            {isLoading && (
+                <YStack position='absolute' zIndex={1} flex={1} bg='rgba(0, 0, 0, .20)' width='100%' height='100%'>
+                    <Animated.View
+                        style={{
+                            transform: [{ translateY: slideAnim }],
+                            position: 'absolute',
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            zIndex: 2,
+                        }}
+                    >
+                        <YStack
+                            height={230}
+                            width='100%'
+                            position='absolute'
+                            bottom={0}
+                            left={0}
+                            right={0}
+                            bg='$background'
+                            alignItems='center'
+                            justifyContent='center'
+                            padding='$4'
+                            borderWidth={1}
+                            borderBottomWidth={0}
+                            borderColor='$borderColorWithShadow'
+                            borderTopRightRadius={20}
+                            borderTopLeftRadius={20}
+                            shadowColor='$shadowColor'
+                            shadowOffset={{ width: 0, height: 1 }}
+                            shadowRadius={3}
+                            shadowOpacity={0.1}
+                            opacity={isLoading ? 1 : 0}
+                        >
+                            <XStack space='$3'>
+                                <Spinner size='small' />
+                                <Text fontSize='$4' color='$textPrimary'>
+                                    Loading account info...
+                                </Text>
+                            </XStack>
+                        </YStack>
+                    </Animated.View>
                 </YStack>
-            </YStack>
-        </SafeAreaView>
+            )}
+        </Portal>
     );
 };
 
