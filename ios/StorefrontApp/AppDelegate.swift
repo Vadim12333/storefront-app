@@ -2,14 +2,23 @@ import React
 import React_RCTAppDelegate
 import ReactAppDependencyProvider
 import UIKit
+import FBSDKCoreKit
+import GoogleSignIn
 
-class AppDelegate: RCTAppDelegate, RNAppAuthAuthorizationFlowManager {
-    public weak var authorizationFlowManagerDelegate: RNAppAuthAuthorizationFlowManagerDelegate?
-
+class AppDelegate: RCTAppDelegate {
     override func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
+         // Initialize ReactNativeNotifications
+        RNNotifications.startMonitorNotifications()
+
+        // Initialize the Facebook SDK
+        ApplicationDelegate.shared.application(
+            application,
+            didFinishLaunchingWithOptions: launchOptions
+        )
+
         moduleName = "StorefrontApp"
         dependencyProvider = RCTAppDependencyProvider()
 
@@ -25,14 +34,35 @@ class AppDelegate: RCTAppDelegate, RNAppAuthAuthorizationFlowManager {
         open url: URL,
         options: [UIApplication.OpenURLOptionsKey: Any] = [:]
     ) -> Bool {
-        // First let RNAppAuth handle it
-        if let flowManager = authorizationFlowManagerDelegate,
-           flowManager.resumeExternalUserAgentFlow(with: url) == true
-        {
+        // Let the Facebook SDK handle the URL
+        if ApplicationDelegate.shared.application(
+            application,
+            open: url,
+            sourceApplication: options[UIApplication.OpenURLOptionsKey.sourceApplication] as? String,
+            annotation: options[UIApplication.OpenURLOptionsKey.annotation]
+        ) {
             return true
         }
+
+         // Let Google Sign-In handle the URL
+        if GIDSignIn.sharedInstance.handle(url) {
+            return true
+        }
+
         // Otherwise fallback to RCTLinkingManager for other deep links
         return RCTLinkingManager.application(application, open: url, options: options)
+    }
+
+    override func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+      RNNotifications.didRegisterForRemoteNotifications(withDeviceToken: deviceToken)
+    }
+
+    override func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        RNNotifications.didFailToRegisterForRemoteNotificationsWithError(error)
+    }
+
+    override func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        RNNotifications.didReceiveBackgroundNotification(userInfo, withCompletionHandler: completionHandler)
     }
 
     override func sourceURL(for _: RCTBridge) -> URL? {

@@ -8,8 +8,10 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { AuthProvider } from './src/contexts/AuthContext';
 import { SocketClusterProvider } from './src/contexts/SocketClusterContext';
 import { CartProvider } from './src/contexts/CartContext';
+import { LanguageProvider } from './src/contexts/LanguageContext';
 import AppNavigator from './src/navigation/AppNavigator';
 import { ThemeProvider, useThemeContext } from './src/contexts/ThemeContext';
+import { NotificationProvider } from './src/contexts/NotificationContext';
 import config from './tamagui.config';
 
 function AppContent(): React.JSX.Element {
@@ -21,17 +23,21 @@ function AppContent(): React.JSX.Element {
                 <GestureHandlerRootView style={{ flex: 1 }}>
                     <SafeAreaProvider>
                         <BottomSheetModalProvider>
-                            <AuthProvider>
-                                <SocketClusterProvider>
-                                    <CartProvider>
-                                        <AppNavigator />
-                                        <Toasts extraInsets={{ bottom: 80 }} />
-                                        <PortalHost name='MainPortal' />
-                                        <PortalHost name='BottomSheetPanelPortal' />
-                                        <PortalHost name='LocationPickerPortal' />
-                                    </CartProvider>
-                                </SocketClusterProvider>
-                            </AuthProvider>
+                            <NotificationProvider>
+                                <LanguageProvider>
+                                    <AuthProvider>
+                                        <SocketClusterProvider>
+                                            <CartProvider>
+                                                <AppNavigator />
+                                                <Toasts extraInsets={{ bottom: 80 }} />
+                                                <PortalHost name='MainPortal' />
+                                                <PortalHost name='BottomSheetPanelPortal' />
+                                                <PortalHost name='LocationPickerPortal' />
+                                            </CartProvider>
+                                        </SocketClusterProvider>
+                                    </AuthProvider>
+                                </LanguageProvider>
+                            </NotificationProvider>
                         </BottomSheetModalProvider>
                     </SafeAreaProvider>
                 </GestureHandlerRootView>
