@@ -30,13 +30,6 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>$(APP_LINK_PREFIX)</string>
-<<<<<<< HEAD
-			</array>
-		</dict>
-	</array>
-	<key>CFBundleVersion</key>
-	<string>$(CURRENT_PROJECT_VERSION)</string>
-=======
 				<string>fb$(FACEBOOK_APP_ID)</string>
 				<string>$(APP_IDENTIFIER)</string>
 				<string>com.googleusercontent.apps.$(GOOGLE_IOS_CLIENT_ID)</string> 
@@ -53,7 +46,6 @@
 	<string>$(FACEBOOK_CLIENT_TOKEN)</string>
 	<key>FacebookDisplayName</key>
 	<string>$(APP_NAME)</string>
->>>>>>> 68b3fb2eea5230d0bc7a8d64f136dc4824d8e073
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>qpaywallet</string>
@@ -72,12 +64,9 @@
 		<string>ard</string>
 		<string>arig</string>
 		<string>Monpay</string>
-<<<<<<< HEAD
-=======
 		<string>fbapi</string>
 		<string>fbauth2</string>
 		<string>fb-messenger-share-api</string>
->>>>>>> 68b3fb2eea5230d0bc7a8d64f136dc4824d8e073
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
@@ -116,18 +105,6 @@
 	<string>This app may need to access your contacts for sharing</string>
 	<key>NSLocalUsageDescription</key>
 	<string>This app requires access to send you notifications about order status updates and
-<<<<<<< HEAD
-other important information.</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>This app requires access to your location to provide create user address for order
-when the app is in use</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>This app requires access to your location to provide create user address for order
-when the app is in use</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app requires access to your location to provide create user address for order
-when the app is in use</string>
-=======
 		other important information.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>This app requires access to your location to provide create user address for order
@@ -138,7 +115,6 @@ when the app is in use</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This app requires access to your location to provide create user address for order
 		when the app is in use</string>
->>>>>>> 68b3fb2eea5230d0bc7a8d64f136dc4824d8e073
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app allows you to upload photos from your photo library</string>
 	<key>NSUserAuthenticationUsageDescription</key>

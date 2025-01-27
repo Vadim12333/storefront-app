@@ -1290,18 +1290,18 @@ PODS:
     - react-native-config/App (= 1.5.3)
   - react-native-config/App (1.5.3):
     - React-Core
-  - react-native-fbsdk-next (13.4.0):
+  - react-native-fbsdk-next (13.4.1):
     - React-Core
-    - react-native-fbsdk-next/Core (= 13.4.0)
-    - react-native-fbsdk-next/Login (= 13.4.0)
-    - react-native-fbsdk-next/Share (= 13.4.0)
-  - react-native-fbsdk-next/Core (13.4.0):
+    - react-native-fbsdk-next/Core (= 13.4.1)
+    - react-native-fbsdk-next/Login (= 13.4.1)
+    - react-native-fbsdk-next/Share (= 13.4.1)
+  - react-native-fbsdk-next/Core (13.4.1):
     - FBSDKCoreKit (~> 18.0)
     - React-Core
-  - react-native-fbsdk-next/Login (13.4.0):
+  - react-native-fbsdk-next/Login (13.4.1):
     - FBSDKLoginKit (~> 18.0)
     - React-Core
-  - react-native-fbsdk-next/Share (13.4.0):
+  - react-native-fbsdk-next/Share (13.4.1):
     - FBSDKGamingServicesKit (~> 18.0)
     - FBSDKShareKit (~> 18.0)
     - React-Core
@@ -1851,7 +1851,7 @@ PODS:
     - Yoga
   - RNFS (2.20.0):
     - React-Core
-  - RNGestureHandler (2.22.0):
+  - RNGestureHandler (2.22.1):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2570,7 +2570,7 @@ SPEC CHECKSUMS:
   React-microtasksnativemodule: c314f95dc827b8fa3765372bb847b477b7663065
   react-native-blur: b37343d4df1af48a17444156b674b26d5aec2425
   react-native-config: 8f7283449bbb048902f4e764affbbf24504454af
-  react-native-fbsdk-next: c1b5a2dca8d9e66baa011f744d56ae3eca789e44
+  react-native-fbsdk-next: 1baeeacf0ecdeb839cca16ca75cb16a9bbbf8e03
   react-native-geolocation: 70b8819c3a45a4613e58c2b13ba694ec1f7de3d2
   react-native-get-random-values: 21325b2244dfa6b58878f51f9aa42821e7ba3d06
   react-native-google-maps: 7cc1184afe41fbd15a3dffd53c924819f6587b69
@@ -2618,7 +2618,7 @@ SPEC CHECKSUMS:
   RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
   RNFlashList: ee2388e0d3ffde77431ba5d09b8f59a0c65a8e05
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
-  RNGestureHandler: 4e7defe5095e936424173fc75f0bf2af5bba8e23
+  RNGestureHandler: 22ab0e79b8ed145c4bd4a4f85088f5d711f13580
   RNGoogleSignin: 6ea46104d70ad75ab0361f36cfcec7c3bc1b8b9f
   RNI18n: e2f7e76389fcc6e84f2c8733ea89b92502351fd8
   RNKeychain: 3536c754b0b75920ff243d794ede14b0c8529d57
