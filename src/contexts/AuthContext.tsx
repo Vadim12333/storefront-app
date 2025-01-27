@@ -1,9 +1,13 @@
 import React, { createContext, useContext, useReducer, useMemo, useEffect, useCallback } from 'react';
+import { Platform } from 'react-native';
 import { EventRegister } from 'react-native-event-listeners';
 import { Customer } from '@fleetbase/storefront';
-import { later, isArray } from '../utils';
+import { later, isArray, storefrontConfig } from '../utils';
 import useStorage, { storage } from '../hooks/use-storage';
 import useStorefront, { adapter } from '../hooks/use-storefront';
+import { useLanguage } from './LanguageContext';
+import { useNotification } from './NotificationContext';
+import { LoginManager as FacebookLoginManager } from 'react-native-fbsdk-next';
 
 const AuthContext = createContext();
 
@@ -26,6 +30,8 @@ const authReducer = (state, action) => {
 
 export const AuthProvider = ({ children }) => {
     const { storefront } = useStorefront();
+    const { setLocale } = useLanguage();
+    const { deviceToken } = useNotification();
     const [storedCustomer, setStoredCustomer] = useStorage('customer');
     const [state, dispatch] = useReducer(authReducer, {
         isSendingCode: false,
@@ -119,6 +125,24 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    // Register customer's device and platform
+    const syncDevice = async (customer, token) => {
+        try {
+            await customer.syncDevice(token, Platform.OS);
+        } catch (err) {
+            throw err;
+        }
+    };
+
+    // Register current state customer's device and platform
+    const registerDevice = async (token) => {
+        try {
+            await state.customer.syncDevice(token, Platform.OS);
+        } catch (err) {
+            throw err;
+        }
+    };
+
     // Create Account: Send verification code
     const requestCreationCode = useCallback(
         async (phone, method = 'sms') => {
@@ -142,11 +166,7 @@ export const AuthProvider = ({ children }) => {
             dispatch({ type: 'VERIFY', isVerifyingCode: true });
             try {
                 const customer = await storefront.customers.create(phone, code, attributes);
-                clearSessionData();
-                setCustomerDefaultLocation(customer);
-                setCustomer(customer);
-                // save customer token
-                storage.setString('_customer_token', customer.token);
+                createCustomerSession(customer);
                 dispatch({ type: 'VERIFY', customer });
             } catch (error) {
                 console.error('[AuthContext] Account creation verification failed:', error);
@@ -180,6 +200,9 @@ export const AuthProvider = ({ children }) => {
         storage.removeItem('_current_location');
         storage.removeItem('_local_locations');
         storage.removeItem('_customer_token');
+
+        // If logged in with facebook
+        FacebookLoginManager.logOut();
     };
 
     // Verify code
@@ -188,11 +211,7 @@ export const AuthProvider = ({ children }) => {
             dispatch({ type: 'VERIFY', isVerifyingCode: true });
             try {
                 const customer = await storefront.customers.verifyCode(state.phone, code);
-                clearSessionData();
-                setCustomerDefaultLocation(customer);
-                setCustomer(customer);
-                // save customer token
-                storage.setString('_customer_token', customer.token);
+                createCustomerSession(customer);
                 dispatch({ type: 'VERIFY', customer });
             } catch (error) {
                 console.error('[AuthContext] Code verification failed:', error);
@@ -204,6 +223,27 @@ export const AuthProvider = ({ children }) => {
         [storefront, state.phone, setCustomer]
     );
 
+    // Create a session from customer data/JSON
+    const createCustomerSession = async (customer, callback = null) => {
+        clearSessionData();
+        setCustomerDefaultLocation(customer);
+        setCustomer(customer);
+        storage.setString('_customer_token', customer.token);
+
+        // run a callback with the customer instance
+        const instance = new Customer(customer, adapter);
+        if (typeof callback === 'function') {
+            callback(instance);
+        }
+
+        // Sync the customer device
+        if (deviceToken) {
+            syncDevice(instance, deviceToken);
+        }
+
+        return instance;
+    };
+
     // Logout: Clear session
     const logout = useCallback(() => {
         setCustomer(null);
@@ -211,6 +251,9 @@ export const AuthProvider = ({ children }) => {
 
         // Clear storage/ cache
         clearSessionData();
+
+        // Reset locale
+        setLocale(storefrontConfig('defaultLocale', 'en'));
 
         later(() => {
             dispatch({ type: 'LOGOUT', isSigningOut: false });
@@ -237,6 +280,9 @@ export const AuthProvider = ({ children }) => {
             requestCreationCode,
             verifyAccountCreation,
             getDefaultAddress,
+            createCustomerSession,
+            syncDevice,
+            registerDevice,
         }),
         [state, login, verifyCode, logout]
     );

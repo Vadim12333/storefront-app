@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
 import { formatCurrency } from '../utils/format';
 import { loadPersistedResource, showActionSheet } from '../utils';
+import FastImage from 'react-native-fast-image';
 
 const OrderItems = ({ order }) => {
     const theme = useTheme();
@@ -53,7 +54,7 @@ const OrderItems = ({ order }) => {
                                         justifyContent='center'
                                         position='relative'
                                     >
-                                        <Image
+                                        <FastImage
                                             source={{ uri: entity.photo_url }}
                                             style={{
                                                 height: '100%',
@@ -63,7 +64,6 @@ const OrderItems = ({ order }) => {
                                                 left: 0,
                                                 borderRadius: 5,
                                             }}
-                                            resizeMode='cover'
                                         />
                                     </YStack>
                                     <YStack flex={1}>
@@ -76,14 +76,14 @@ const OrderItems = ({ order }) => {
                                             </Text>
                                         )}
                                         <YStack>
-                                            {entity.meta.variants.map((variant) => (
+                                            {entity.meta.variants.filter(Boolean).map((variant) => (
                                                 <XStack key={variant.id} alignItems='center' space='$2'>
                                                     <Text flex={1} fontSize='$3' color='$textSecondary' numberOfLines={1}>
                                                         {variant.name}
                                                     </Text>
                                                 </XStack>
                                             ))}
-                                            {entity.meta.addons.map((addon) => (
+                                            {entity.meta.addons.filter(Boolean).map((addon) => (
                                                 <XStack key={addon.id} alignItems='center' space='$2'>
                                                     <Text flex={1} fontSize='$3' color='$textSecondary' numberOfLines={1}>
                                                         {addon.name}

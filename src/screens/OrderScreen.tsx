@@ -17,6 +17,7 @@ import OrderItems from '../components/OrderItems';
 import OrderTotal from '../components/OrderTotal';
 import Badge from '../components/Badge';
 import useSocketClusterClient from '../hooks/use-socket-cluster-client';
+import FastImage from 'react-native-fast-image';
 
 const OrderScreen = ({ route }) => {
     const params = route.params || {};
@@ -40,10 +41,9 @@ const OrderScreen = ({ route }) => {
     }, [order]);
 
     const reloadOrder = useCallback(async () => {
-        console.log('[order]', order);
         try {
-            // const order = await order.reload();
-            // setOrder(order);
+            const reloadedOrder = await order.reload();
+            setOrder(reloadedOrder);
         } catch (err) {
             console.error('Error reloading order:', err);
         }
@@ -70,14 +70,21 @@ const OrderScreen = ({ route }) => {
     }, []);
 
     useEffect(() => {
-        if (!order || listenerRef.current) {
+        if (!order) {
+            return;
+        }
+
+        getDistanceMatrix();
+    }, [order]);
+
+    useEffect(() => {
+        if (listenerRef.current) {
             return;
         }
 
         const listenForUpdates = async () => {
             const listener = await listen(`order.${order.id}`, (event) => {
                 reloadOrder();
-                getDistanceMatrix();
             });
             if (listener) {
                 listenerRef.current = listener;
@@ -91,7 +98,7 @@ const OrderScreen = ({ route }) => {
                 listenerRef.current.stop();
             }
         };
-    }, [listen, order]);
+    }, [listen, order.id]);
 
     return (
         <YStack flex={1} bg='$background'>
@@ -120,7 +127,7 @@ const OrderScreen = ({ route }) => {
                     <YStack px='$4' py='$2'>
                         <XStack px='$4' py='$3' bg='$surface' borderRadius='$4' borderWidth={1} borderColor='$borderColorWithShadow'>
                             <YStack mr='$3'>
-                                <Image source={{ uri: store.logo_url }} width={40} height={40} borderRadius='$4' />
+                                <FastImage source={{ uri: store.logo_url }} style={{ width: 40, height: 40, borderRadius: 6 }} />
                             </YStack>
                             <YStack>
                                 <Text color='$textPrimary' fontSize='$5' fontWeight='bold'>

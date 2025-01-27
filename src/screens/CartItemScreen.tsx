@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faTimes, faAsterisk, faCheck, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useNavigation } from '@react-navigation/native';
 import { toast, ToastPosition } from '@backpackapp-io/react-native-toast';
-import { restoreStorefrontInstance, isEmpty } from '../utils';
+import { restoreSdkInstance, isEmpty } from '../utils';
 import { formatCurrency } from '../utils/format';
 import { calculateProductSubtotal, getCartItem } from '../utils/cart';
 import { isProductReadyForCheckout, getSelectedVariants, getSelectedAddons, getAddonSelectionsFromCartItem, getVariantSelectionsFromCartItem } from '../utils/product';
@@ -14,6 +14,7 @@ import ProductOptionsForm from '../components/ProductOptionsForm';
 import LinearGradient from 'react-native-linear-gradient';
 import useCart from '../hooks/use-cart';
 import usePromiseWithLoading from '../hooks/use-promise-with-loading';
+import FastImage from 'react-native-fast-image';
 
 const CartItemScreen = ({ route = {} }) => {
     const theme = useTheme();
@@ -21,7 +22,7 @@ const CartItemScreen = ({ route = {} }) => {
     const { runWithLoading, isLoading } = usePromiseWithLoading();
     const [cart, updateCart] = useCart();
     const [cartItem, setCartItem] = useState(route.params.cartItem);
-    const [product, setProduct] = useState(restoreStorefrontInstance(route.params.product, 'product'));
+    const [product, setProduct] = useState(restoreSdkInstance(route.params.product, 'product'));
     const [selectedAddons, setSelectedAddons] = useState(getAddonSelectionsFromCartItem(cartItem, product));
     const [selectedVariants, setSelectedVariants] = useState(getVariantSelectionsFromCartItem(cartItem, product));
     const [subtotal, setSubtotal] = useState(0);
@@ -90,7 +91,7 @@ const CartItemScreen = ({ route = {} }) => {
     return (
         <YStack flex={1} bg='$background'>
             <YStack position='relative' height={200} width='100%' overflow='hidden'>
-                <Image
+                <FastImage
                     source={{ uri: cartItem.product_image_url }}
                     style={{
                         height: '100%',
@@ -99,7 +100,6 @@ const CartItemScreen = ({ route = {} }) => {
                         top: 0,
                         left: 0,
                     }}
-                    resizeMode='cover'
                 />
                 <XStack justifyContent='flex-end' alignItems='center' position='absolute' top={0} left={0} right={0} padding='$4' zIndex={1}>
                     <Button size={35} onPress={handleClose} bg='$secondary' circular>

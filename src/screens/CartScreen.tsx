@@ -9,6 +9,7 @@ import { formatCurrency } from '../utils/format';
 import { delay, loadPersistedResource, storefrontConfig } from '../utils';
 import { calculateCartTotal } from '../utils/cart';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
+import FastImage from 'react-native-fast-image';
 import useCart from '../hooks/use-cart';
 import usePromiseWithLoading from '../hooks/use-promise-with-loading';
 import StorefrontConfig from '../../storefront.config';
@@ -167,7 +168,7 @@ const CartScreen = () => {
                 ]}
             >
                 <Swipeable renderRightActions={() => renderRightActions(cartItem)}>
-                    <YStack flex={1} bg='$background' padding='$4' minHeight={100} maxHeight={125}>
+                    <YStack flex={1} bg='$background' padding='$4' height={125} minHeight={100} maxHeight={350}>
                         <XStack space='$3' justifyContent='space-between'>
                             <XStack flex={1}>
                                 <Pressable onPress={() => handleEdit(cartItem)} style={{ flex: 1 }}>
@@ -194,7 +195,7 @@ const CartScreen = () => {
                                             justifyContent='center'
                                             position='relative'
                                         >
-                                            <Image
+                                            <FastImage
                                                 source={{ uri: cartItem.product_image_url }}
                                                 style={{
                                                     height: '100%',
@@ -204,7 +205,6 @@ const CartScreen = () => {
                                                     left: 0,
                                                     borderRadius: 5,
                                                 }}
-                                                resizeMode='cover'
                                             />
                                         </YStack>
                                         <YStack>
