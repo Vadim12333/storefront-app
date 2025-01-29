@@ -30,6 +30,7 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>$(APP_LINK_PREFIX)</string>
+				<string>fb$(FACEBOOK_APP_ID)</string>
 				<string>$(APP_IDENTIFIER)</string>
 				<string>com.googleusercontent.apps.$(GOOGLE_IOS_CLIENT_ID)</string> 
 			</array>
