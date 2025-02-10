@@ -1,7 +1,7 @@
 import { createStaticNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform, View } from 'react-native';
 import { BlurView } from '@react-native-community/blur';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faHome, faMagnifyingGlass, faMap, faShoppingCart, faUser, faTruck } from '@fortawesome/free-solid-svg-icons';
@@ -9,7 +9,7 @@ import { useTheme } from 'tamagui';
 import { storefrontConfig, get, config, toArray } from '../utils';
 import { configCase } from '../utils/format';
 import { useIsNotAuthenticated, useIsAuthenticated } from '../contexts/AuthContext';
-import { StoreHome, StoreSearch, StoreMap, StoreCategory } from './stacks/StoreStack';
+import { StoreHome, StoreSearch, StoreMap, StoreCategory, StoreInfo } from './stacks/StoreStack';
 import { PortalHost } from '@gorhom/portal';
 import LocationStack from './stacks/LocationStack';
 import CheckoutStack from './stacks/CheckoutStack';
@@ -233,6 +233,7 @@ const StoreMapTab = createNativeStackNavigator({
     initialRouteName: 'StoreMap',
     screens: {
         StoreMap,
+        StoreInfo,
     },
 });
 
@@ -338,13 +339,18 @@ const StoreNavigator = createBottomTabNavigator({
 
         return {
             headerShown: false,
-            tabBarBackground: () => <BlurView tint={isDarkMode ? 'dark' : 'light'} intensity={100} style={StyleSheet.absoluteFill} />,
+            tabBarBackground: () => (
+                <View style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
+                    <BlurView tint={isDarkMode ? 'dark' : 'light'} intensity={100} style={StyleSheet.absoluteFill} />
+                </View>
+            ),
             tabBarInactiveTintColor: theme.secondary.val,
             tabBarActiveTintColor: theme.primary.val,
             tabBarStyle: {
                 backgroundColor: theme.background.val,
                 borderTopWidth: 1,
                 borderTopColor: isDarkMode ? theme.borderColor.val : theme['$gray-600'].val,
+                position: 'relative',
             },
             tabBarIcon: ({ focused }) => {
                 const icon = getDefaultTabIcon(route.name);

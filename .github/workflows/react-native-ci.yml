@@ -125,5 +125,105 @@ jobs:
             - name: Install iOS pods
               run: cd ios && pod install
 
-            - name: Build iOS
-              run: npx react-native run-ios
+            - name: Start Metro Bundler in the background
+              run: yarn start --reset-cache &
+
+            - name: List available simulators
+              run: xcrun simctl list devices
+
+            - name: Boot iOS Simulator
+              run: |
+                  SIMULATOR_NAME="iPhone 15 Pro"
+                  SIMULATOR_ID=$(xcrun simctl list devices available | grep -i "$SIMULATOR_NAME (" | head -n 1 | sed -E 's/.*\(([A-F0-9-]+)\).*/\1/')
+
+                  if [ -z "$SIMULATOR_ID" ]; then
+                    echo "❌ No available simulator found for $SIMULATOR_NAME"
+                    exit 1
+                  fi
+
+                  echo "✅ Found simulator ID: $SIMULATOR_ID"
+                  xcrun simctl boot "$SIMULATOR_ID"
+
+                  # Debugging: Print simulator status
+                  echo "📝 Checking simulator status..."
+                  xcrun simctl list devices | grep "$SIMULATOR_ID"
+
+                  # Prevent infinite hang: Limit wait time to 60 seconds
+                  echo "⏳ Waiting for simulator to be ready (max 60s)..."
+                  for i in {1..12}; do
+                      STATUS=$(xcrun simctl list devices | grep "$SIMULATOR_ID")
+                      if [[ "$STATUS" == *"(Booted)"* ]]; then
+                          echo "✅ Simulator is booted!"
+                          break
+                      fi
+                      sleep 5
+                  done
+
+                  # Final check
+                  FINAL_STATUS=$(xcrun simctl list devices | grep "$SIMULATOR_ID")
+                  if [[ "$FINAL_STATUS" != *"(Booted)"* ]]; then
+                      echo "❌ Simulator failed to boot within 60 seconds."
+                      exit 1
+                  fi
+
+            - name: Debug Available Xcode Destinations
+              run: xcodebuild -showsdks
+
+            - name: Debug Available iOS Versions
+              run: xcrun simctl list runtimes
+
+            - name: Debug Xcode Schemes
+              run: |
+                  cd ios
+                  xcodebuild -list
+
+            - name: Build iOS app
+              run: |
+                  cd ios
+                  xcodebuild -workspace StorefrontApp.xcworkspace \
+                    -scheme StorefrontApp \
+                    -configuration Debug \
+                    -sdk iphonesimulator \
+                    -destination "platform=iOS Simulator,name=iPhone 15 Pro,OS=18.2" \
+                    -derivedDataPath build \
+                    -allowProvisioningUpdates
+
+            - name: Debug iOS Build Output
+              run: |
+                  echo "📂 Checking iOS build output..."
+                  if [ -d "ios/build" ]; then
+                    find ios/build -name "*.app" || echo "❌ No app build found!"
+                  else
+                    echo "❌ Build folder does not exist!"
+                  fi
+
+            - name: Run iOS app on simulator
+              run: |
+                  SIMULATOR_NAME="iPhone 15 Pro"
+                  SIMULATOR_ID=$(xcrun simctl list devices available | grep -i "$SIMULATOR_NAME (" | head -n 1 | sed -E 's/.*\(([A-F0-9-]+)\).*/\1/')
+
+                  if [ -z "$SIMULATOR_ID" ]; then
+                    echo "❌ No available simulator ID found for $SIMULATOR_NAME"
+                    exit 1
+                  fi
+
+                  echo "✅ Using Simulator ID: $SIMULATOR_ID"
+
+                  # Debugging: Confirm simulator state
+                  echo "📝 Checking simulator status..."
+                  xcrun simctl list devices | grep "$SIMULATOR_ID"
+
+                  # Debugging: Confirm the app file exists
+                  APP_PATH="ios/build/Build/Products/Debug-iphonesimulator/StorefrontApp.app"
+                  if [ ! -d "$APP_PATH" ]; then
+                    echo "❌ App bundle not found at $APP_PATH"
+                    exit 1
+                  fi
+
+                  # Install the app on the simulator
+                  echo "📥 Installing app on simulator..."
+                  xcrun simctl install "$SIMULATOR_ID" "$APP_PATH"
+
+                  # Launch the app
+                  echo "🚀 Launching app on simulator..."
+                  xcrun simctl launch "$SIMULATOR_ID" com.storefront.app
