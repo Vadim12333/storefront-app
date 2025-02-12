@@ -12,6 +12,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import useAppTheme from '../hooks/use-app-theme';
 import DeviceInfo from 'react-native-device-info';
 import storage from '../utils/storage';
+import AbsoluteTabBarScreenWrapper from '../components/AbsoluteTabBarScreenWrapper';
 
 const AccountScreen = () => {
     const theme = useTheme();
@@ -217,51 +218,53 @@ const AccountScreen = () => {
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.background.val }}>
             <ScrollView showsVerticalScrollIndicator={false}>
-                <YStack flex={1} bg='$background' space='$8' pt='$8'>
-                    <YStack space='$2'>
-                        <XStack px='$3' justifyContent='space-between'>
-                            <YStack>
-                                <Text fontSize='$8' fontWeight='bold' color='$textPrimary' numberOfLines={1}>
-                                    {t('AccountScreen.account')}
-                                </Text>
-                            </YStack>
-                            <YStack>
-                                <Text fontSize='$3' color='$textSecondary' numberOfLines={1}>
-                                    v{DeviceInfo.getVersion()}
-                                </Text>
-                            </YStack>
-                        </XStack>
-                        <FlatList
-                            data={accountMenu}
-                            keyExtractor={(item) => item.title}
-                            renderItem={renderMenuItem}
-                            ItemSeparatorComponent={() => <Separator borderBottomWidth={1} borderColor='$borderColorWithShadow' />}
-                            scrollEnabled={false}
-                        />
-                    </YStack>
-                    <YStack space='$2'>
-                        <YStack px='$3'>
-                            <Text color='$textPrimary' fontSize='$8' fontWeight='bold'>
-                                {t('AccountScreen.dataProtection')}
-                            </Text>
+                <AbsoluteTabBarScreenWrapper>
+                    <YStack flex={1} bg='$background' space='$8' pt='$8'>
+                        <YStack space='$2'>
+                            <XStack px='$3' justifyContent='space-between'>
+                                <YStack>
+                                    <Text fontSize='$8' fontWeight='bold' color='$textPrimary' numberOfLines={1}>
+                                        {t('AccountScreen.account')}
+                                    </Text>
+                                </YStack>
+                                <YStack>
+                                    <Text fontSize='$3' color='$textSecondary' numberOfLines={1}>
+                                        v{DeviceInfo.getVersion()}
+                                    </Text>
+                                </YStack>
+                            </XStack>
+                            <FlatList
+                                data={accountMenu}
+                                keyExtractor={(item) => item.title}
+                                renderItem={renderMenuItem}
+                                ItemSeparatorComponent={() => <Separator borderBottomWidth={1} borderColor='$borderColorWithShadow' />}
+                                scrollEnabled={false}
+                            />
                         </YStack>
-                        <FlatList
-                            data={dataProtectionMenu}
-                            keyExtractor={(item) => item.title}
-                            renderItem={renderMenuItem}
-                            ItemSeparatorComponent={() => <Separator borderBottomWidth={1} borderColor='$borderColorWithShadow' />}
-                            scrollEnabled={false}
-                        />
+                        <YStack space='$2'>
+                            <YStack px='$3'>
+                                <Text color='$textPrimary' fontSize='$8' fontWeight='bold'>
+                                    {t('AccountScreen.dataProtection')}
+                                </Text>
+                            </YStack>
+                            <FlatList
+                                data={dataProtectionMenu}
+                                keyExtractor={(item) => item.title}
+                                renderItem={renderMenuItem}
+                                ItemSeparatorComponent={() => <Separator borderBottomWidth={1} borderColor='$borderColorWithShadow' />}
+                                scrollEnabled={false}
+                            />
+                        </YStack>
+                        <YStack padding='$4' mb='$5'>
+                            <Button marginTop='$4' bg='$error' borderColor='$errorBorder' borderWidth={1} size='$5' onPress={handleSignout} rounded width='100%'>
+                                <Button.Icon>{isSigningOut ? <Spinner color='$errorText' /> : <YStack />}</Button.Icon>
+                                <Button.Text color='$errorText' fontWeight='bold'>
+                                    {t('AccountScreen.signOut')}
+                                </Button.Text>
+                            </Button>
+                        </YStack>
                     </YStack>
-                    <YStack padding='$4' mb='$5'>
-                        <Button marginTop='$4' bg='$red-900' borderWidth={1} borderColor='$red-600' size='$5' onPress={handleSignout} rounded width='100%'>
-                            <Button.Icon>{isSigningOut ? <Spinner color='$red-100' /> : <YStack />}</Button.Icon>
-                            <Button.Text color='$red-100' fontWeight='bold'>
-                                {t('AccountScreen.signOut')}
-                            </Button.Text>
-                        </Button>
-                    </YStack>
-                </YStack>
+                </AbsoluteTabBarScreenWrapper>
             </ScrollView>
         </SafeAreaView>
     );

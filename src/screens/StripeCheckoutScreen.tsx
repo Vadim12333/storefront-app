@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { SafeAreaView, ScrollView } from 'react-native';
 import { Button, Text, YStack, XStack, useTheme } from 'tamagui';
 import CustomerLocationSelect from '../components/CustomerLocationSelect';
@@ -11,6 +12,7 @@ import CheckoutTotal from '../components/CheckoutTotal';
 import DeliveryRoutePreview from '../components/DeliveryRoutePreview';
 import CheckoutButton from '../components/CheckoutButton';
 import CheckoutPickupSwitch from '../components/CheckoutPickupSwitch';
+import TextAreaSheet from '../components/TextAreaSheet';
 import useStorefrontInfo from '../hooks/use-storefront-info';
 import { useStripeCheckoutContext } from '../contexts/StripeCheckoutContext';
 import { storefrontConfig, firstRouteName } from '../utils';
@@ -18,9 +20,23 @@ import { storefrontConfig, firstRouteName } from '../utils';
 const StripeCheckoutScreen = () => {
     const theme = useTheme();
     const navigation = useNavigation();
+    const tabBarHeight = useBottomTabBarHeight();
     const { enabled } = useStorefrontInfo();
-    const { customer, handleCompleteOrder, handleDeliveryLocationChange, setTipOptions, setPickup, isPickup, isPickupEnabled, lineItems, totalAmount, isNotReady, isLoading } =
-        useStripeCheckoutContext();
+    const {
+        customer,
+        handleCompleteOrder,
+        handleDeliveryLocationChange,
+        setTipOptions,
+        orderNotes,
+        setOrderNotes,
+        setPickup,
+        isPickup,
+        isPickupEnabled,
+        lineItems,
+        totalAmount,
+        isNotReady,
+        isLoading,
+    } = useStripeCheckoutContext();
     const completeOrder = useCallback(() => {
         handleCompleteOrder((order) => {
             navigation.reset({
@@ -66,6 +82,12 @@ const StripeCheckoutScreen = () => {
                                 {storefrontConfig('stripePaymentMethod') === 'field' ? <StripeCardFieldSheet /> : <StripePaymentSheet />}
                             </YStack>
                         )}
+                        <YStack space='$3'>
+                            <Text fontSize='$7' color='$textPrimary' fontWeight='bold'>
+                                Order notes
+                            </Text>
+                            <TextAreaSheet value={orderNotes} onChange={setOrderNotes} title='Order Notes' placeholder='Enter additional notes for order' />
+                        </YStack>
                         {hasCheckoutOptions && (
                             <YStack space='$3'>
                                 <Text fontSize='$7' color='$textPrimary' fontWeight='bold'>
@@ -84,7 +106,7 @@ const StripeCheckoutScreen = () => {
                     </YStack>
                 </YStack>
             </ScrollView>
-            <XStack animate='bouncy' position='absolute' bottom={0} left={0} right={0} padding='$5' zIndex={5}>
+            <XStack animate='bouncy' position='absolute' bottom={tabBarHeight} left={0} right={0} padding='$4' zIndex={5}>
                 <CheckoutButton onCheckout={completeOrder} total={totalAmount} disabled={isNotReady} isLoading={isLoading} />
             </XStack>
         </YStack>
