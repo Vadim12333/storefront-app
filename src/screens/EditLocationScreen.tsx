@@ -3,7 +3,6 @@ import { useNavigation } from '@react-navigation/native';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { SafeAreaView, ScrollView } from 'react-native';
 import { Spinner, Text, YStack, XStack, Button, Input, useTheme } from 'tamagui';
-import { toast, ToastPosition } from '@backpackapp-io/react-native-toast';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faBuildingUser, faHouse, faBuilding, faHotel, faHospital, faSchool, faChair, faAsterisk } from '@fortawesome/free-solid-svg-icons';
 import { Place } from '@fleetbase/sdk';
@@ -11,6 +10,7 @@ import { adapter } from '../hooks/use-storefront';
 import { useAuth } from '../contexts/AuthContext';
 import { formattedAddressFromSerializedPlace, restoreFleetbasePlace } from '../utils/location';
 import { isEmpty, toBoolean } from '../utils';
+import { toast } from '../utils/toast';
 import usePromiseWithLoading from '../hooks/use-promise-with-loading';
 import useStorefront from '../hooks/use-storefront';
 import useCurrentLocation from '../hooks/use-current-location';
@@ -18,6 +18,7 @@ import useSavedLocations from '../hooks/use-saved-locations';
 import { useAppTheme } from '../hooks/use-app-theme';
 import ExpandableSelect from '../components/ExpandableSelect';
 import PlaceMapView from '../components/PlaceMapView';
+import PhoneInput from '../components/PhoneInput';
 import Spacer from '../components/Spacer';
 import AbsoluteTabBarScreenWrapper from '../components/AbsoluteTabBarScreenWrapper';
 
@@ -35,8 +36,8 @@ const LocationPropertyInput = ({ value, onChange, placeholder }) => {
             borderColor='$borderColorWithShadow'
             borderRadius='$4'
             bg='$surface'
-            autoCapitalize={false}
-            autoComplete={false}
+            autoCapitalize='none'
+            autoComplete='off'
             autoCorrect={false}
         />
     );
@@ -59,6 +60,7 @@ const EditLocationScreen = ({ route }) => {
     const [neighborhood, setNeighborhood] = useState(place.neighborhood);
     const [city, setCity] = useState(place.city);
     const [postalCode, setPostalCode] = useState(place.postal_code);
+    const [phone, setPhone] = useState(place.phone);
     const [instructions, setInstructions] = useState(place.meta.instructions);
     const redirectTo = params.redirectTo;
     const redirectToScreen = params.redirectToScreen;
@@ -119,17 +121,17 @@ const EditLocationScreen = ({ route }) => {
     };
 
     const getUpdatedPlace = () => {
-        return { ...place, street1, street2, neighborhood, city, postal_code: postalCode, meta: { instructions } };
+        return { ...place, street1, street2, neighborhood, city, phone, postal_code: postalCode, meta: { instructions } };
     };
 
     const handleSavePlace = async () => {
         try {
             await runWithLoading(addLocation(getUpdatedPlace(), makeDefault), 'saving');
-            toast.success('Address saved.', { position: ToastPosition.bottom });
+            toast.success('Address saved.');
             handleRedirect();
         } catch (error) {
             console.log('Error saving address details:', error);
-            toast.error(error.message, { position: ToastPosition.bottom });
+            toast.error(error.message);
         }
     };
 
@@ -138,11 +140,11 @@ const EditLocationScreen = ({ route }) => {
         if (restoredInstance && restoredInstance.isSaved) {
             try {
                 await runWithLoading(updateDefaultLocationPromise(restoredInstance), 'defaulting');
-                toast.success(`${restoredInstance.getAttribute('name')} is now your default location.`, { position: ToastPosition.bottom });
+                toast.success(`${restoredInstance.getAttribute('name')} is now your default location.`);
                 handleRedirect();
             } catch (error) {
                 console.log('Error making address default location:', error);
-                toast.error(error.message, { position: ToastPosition.bottom });
+                toast.error(error.message);
             }
         }
     };
@@ -155,7 +157,7 @@ const EditLocationScreen = ({ route }) => {
         if (restoredInstance && restoredInstance.isSaved) {
             try {
                 await runWithLoading(deleteLocation(restoredInstance), 'deleting');
-                toast.success(`${restoredInstance.getAttribute('name')} was deleted.`, { position: ToastPosition.bottom });
+                toast.success(`${restoredInstance.getAttribute('name')} was deleted.`);
 
                 // If the deleted place was the current location and there’s another saved location, make it the default
                 if (isCurrentLocation && nextPlace) {
@@ -165,7 +167,7 @@ const EditLocationScreen = ({ route }) => {
                 handleRedirect();
             } catch (error) {
                 console.error('Error deleting saved address: ', error);
-                toast.error(error.message, { position: ToastPosition.bottom });
+                toast.error(error.message);
             }
         }
     };
@@ -178,7 +180,7 @@ const EditLocationScreen = ({ route }) => {
         try {
             setPlace({ ...place, type });
         } catch (error) {
-            toast.error('Unable to select location type.', { position: ToastPosition.bottom });
+            toast.error('Unable to select location type.');
         }
     };
 
@@ -279,6 +281,15 @@ const EditLocationScreen = ({ route }) => {
                                         Postal or zip code
                                     </Text>
                                     <LocationPropertyInput value={postalCode} onChange={setPostalCode} placeholder='Postal or zip code' />
+                                    <Text fontSize='$1' color='$textSecondary' mt='$2' px='$2'>
+                                        Optional
+                                    </Text>
+                                </YStack>
+                                <YStack width='100%'>
+                                    <Text fontSize='$3' fontWeight='bold' color='$textSecondary' mb='$2'>
+                                        Phone number
+                                    </Text>
+                                    <PhoneInput value={phone} onChange={setPhone} placeholder='Phone number for courier to contact for delivery' />
                                     <Text fontSize='$1' color='$textSecondary' mt='$2' px='$2'>
                                         Optional
                                     </Text>

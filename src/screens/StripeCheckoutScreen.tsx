@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import { SafeAreaView, ScrollView } from 'react-native';
+import { SafeAreaView, ScrollView, Platform } from 'react-native';
 import { Button, Text, YStack, XStack, useTheme } from 'tamagui';
+import { PortalHost } from '@gorhom/portal';
 import CustomerLocationSelect from '../components/CustomerLocationSelect';
 import StripeCardFieldSheet from '../components/StripeCardFieldSheet';
 import StripePaymentSheet from '../components/StripePaymentSheet';
@@ -15,8 +16,9 @@ import CheckoutPickupSwitch from '../components/CheckoutPickupSwitch';
 import TextAreaSheet from '../components/TextAreaSheet';
 import useStorefrontInfo from '../hooks/use-storefront-info';
 import { useStripeCheckoutContext } from '../contexts/StripeCheckoutContext';
-import { storefrontConfig, firstRouteName } from '../utils';
+import { storefrontConfig, firstRouteName, wasAccessedFromCartModal } from '../utils';
 
+const isAndroid = Platform.OS === 'android';
 const StripeCheckoutScreen = () => {
     const theme = useTheme();
     const navigation = useNavigation();
@@ -46,6 +48,8 @@ const StripeCheckoutScreen = () => {
         });
     }, [handleCompleteOrder, navigation]);
     const hasCheckoutOptions = enabled('tips') || enabled('delivery_tips');
+    const isModalScreen = wasAccessedFromCartModal(navigation);
+    const portalHost = isModalScreen === true ? 'StripeCheckoutPortal' : 'MainPortal';
 
     return (
         <YStack bg='$background'>
@@ -54,7 +58,7 @@ const StripeCheckoutScreen = () => {
                     <YStack height={300}>
                         <DeliveryRoutePreview />
                     </YStack>
-                    <YStack padding='$3' space='$5'>
+                    <YStack px='$3' py='$1' space='$5'>
                         {isPickupEnabled && (
                             <YStack space='$3'>
                                 <CheckoutPickupSwitch onChange={(isPickup) => setPickup(isPickup)} />
@@ -86,7 +90,7 @@ const StripeCheckoutScreen = () => {
                             <Text fontSize='$7' color='$textPrimary' fontWeight='bold'>
                                 Order notes
                             </Text>
-                            <TextAreaSheet value={orderNotes} onChange={setOrderNotes} title='Order Notes' placeholder='Enter additional notes for order' />
+                            <TextAreaSheet value={orderNotes} onChange={setOrderNotes} title='Order Notes' placeholder='Enter additional notes for order' portalHost={portalHost} />
                         </YStack>
                         {hasCheckoutOptions && (
                             <YStack space='$3'>
@@ -106,9 +110,10 @@ const StripeCheckoutScreen = () => {
                     </YStack>
                 </YStack>
             </ScrollView>
-            <XStack animate='bouncy' position='absolute' bottom={tabBarHeight} left={0} right={0} padding='$4' zIndex={5}>
+            <XStack animate='bouncy' position='absolute' bottom={isModalScreen && !isAndroid ? 25 : tabBarHeight} left={0} right={0} padding='$4' zIndex={5}>
                 <CheckoutButton onCheckout={completeOrder} total={totalAmount} disabled={isNotReady} isLoading={isLoading} />
             </XStack>
+            <PortalHost name='StripeCheckoutPortal' />
         </YStack>
     );
 };

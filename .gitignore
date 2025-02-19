@@ -32,6 +32,10 @@ local.properties
 android/*.hprof
 android/app/build
 android/.kotlin
+android/app/release/*
+android/app/release
+android/*keystore
+android/**/*keystore
 
 # node.js
 #

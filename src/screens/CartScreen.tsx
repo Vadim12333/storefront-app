@@ -5,7 +5,7 @@ import { Animated, SafeAreaView, Pressable, StyleSheet, LayoutAnimation, UIManag
 import { Separator, Spinner, View, Image, Text, YStack, XStack, Button, useTheme } from 'tamagui';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faPencilAlt, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { toast, ToastPosition } from '@backpackapp-io/react-native-toast';
+import { toast } from '../utils/toast';
 import { formatCurrency } from '../utils/format';
 import { delay, loadPersistedResource, storefrontConfig } from '../utils';
 import { calculateCartTotal } from '../utils/cart';
@@ -15,11 +15,13 @@ import useCart from '../hooks/use-cart';
 import usePromiseWithLoading from '../hooks/use-promise-with-loading';
 import StorefrontConfig from '../../storefront.config';
 
-if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
+const isAndroid = Platform.OS === 'android';
+if (isAndroid && UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
-const CartScreen = () => {
+const CartScreen = ({ route }) => {
+    const routeName = route.name;
     const theme = useTheme();
     const navigation = useNavigation();
     const tabBarHeight = useBottomTabBarHeight();
@@ -27,23 +29,20 @@ const CartScreen = () => {
     const [cart, updateCart] = useCart();
     const [displayedItems, setDisplayedItems] = useState(cart ? cart.contents() : []);
     const rowRefs = useRef({});
-
-    // Make sure cart items is latest
-    useEffect(() => {
-        setDisplayedItems(cart ? cart.contents() : []);
-    }, [cart]);
+    const isModalScreen = typeof routeName === 'string' && routeName.endsWith('Modal');
 
     const handleCheckout = () => {
+        const params = {};
         if (storefrontConfig('paymentGateway') === 'stripe') {
-            return navigation.navigate('StripeCheckout');
+            return navigation.navigate('StripeCheckout', params);
         }
 
         if (storefrontConfig('paymentGateway') === 'qpay') {
-            return navigation.navigate('QPayCheckout');
+            return navigation.navigate('QPayCheckout', params);
         }
 
         if (storefrontConfig('paymentGateway') === 'paypal') {
-            return navigation.navigate('PaypalCheckout');
+            return navigation.navigate('PaypalCheckout', params);
         }
     };
 
@@ -58,7 +57,7 @@ const CartScreen = () => {
         const rowRef = rowRefs.current[cartItem.id];
 
         if (!rowRef) {
-            toast.error('Could not find item to delete.', { position: ToastPosition.BOTTOM });
+            toast.error('Could not find item to delete.');
             return;
         }
 
@@ -80,7 +79,7 @@ const CartScreen = () => {
 
             // Remove item visually
             setDisplayedItems((prevItems) => prevItems.filter((item) => item.id !== cartItem.id));
-            toast.success(`${cartItem.name} removed from cart.`, { position: ToastPosition.BOTTOM });
+            toast.success(`${cartItem.name} removed from cart.`);
 
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
 
@@ -96,7 +95,7 @@ const CartScreen = () => {
         const cartItems = cart.contents();
 
         if (!cartItems.length) {
-            toast.error('Cart is already empty', { position: ToastPosition.BOTTOM });
+            toast.error('Cart is already empty');
             return;
         }
 
@@ -125,7 +124,7 @@ const CartScreen = () => {
             });
 
             await Promise.all(animations);
-            toast.success('Cart emptied', { position: ToastPosition.BOTTOM });
+            toast.success('Cart emptied');
 
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
 
@@ -136,6 +135,11 @@ const CartScreen = () => {
             console.error('Error emptying cart:', error.message);
         }
     };
+
+    // Make sure cart items is latest
+    useEffect(() => {
+        setDisplayedItems(cart ? cart.contents() : []);
+    }, [cart]);
 
     const renderRightActions = (cartItem) => (
         <XStack height='100%' width={200} minHeight={100} maxHeight={125}>
@@ -216,12 +220,12 @@ const CartScreen = () => {
                                         <YStack height={125} minHeight={100} maxHeight={350} overflow='hidden' width='90%' space='$1'>
                                             <YStack>
                                                 <XStack space='$2' alignItems='center'>
-                                                    <Text fontSize='$5' fontWeight='bold' color='$textPrimary' numberOfLines={1}>
+                                                    <Text fontSize='$4' fontWeight='bold' color='$textPrimary' numberOfLines={1}>
                                                         {cartItem.name}
                                                     </Text>
                                                 </XStack>
                                                 {cartItem.description && (
-                                                    <Text fontSize='$4' color='$textSecondary' numberOfLines={2}>
+                                                    <Text fontSize='$3' color='$textSecondary' numberOfLines={2}>
                                                         {cartItem.description}
                                                     </Text>
                                                 )}
@@ -248,7 +252,7 @@ const CartScreen = () => {
                             </XStack>
                             <YStack width={150} alignItems='flex-end'>
                                 <YStack>
-                                    <Text fontSize='$5' color='$textPrimary' fontWeight='bold'>
+                                    <Text fontSize='$4' color='$textPrimary' fontWeight='bold'>
                                         {formatCurrency(cartItem.subtotal, cart.getAttribute('currency'))}
                                     </Text>
                                 </YStack>
@@ -292,7 +296,7 @@ const CartScreen = () => {
                 <YStack
                     position='absolute'
                     bg='$background'
-                    bottom={tabBarHeight}
+                    bottom={isModalScreen ? (isAndroid ? 24 : 0) : tabBarHeight}
                     borderTopWidth={1}
                     borderColor='$borderColorWithShadow'
                     width='100%'
@@ -302,8 +306,8 @@ const CartScreen = () => {
                     shadowOpacity={0.15}
                     shadowRadius={3}
                 >
-                    <XStack alignItems='center' justifyContent='space-between'>
-                        <YStack flex={1} space='$1'>
+                    <XStack alignItems='center' justifyContent='space-between' paddingBottom={isModalScreen ? 25 : 0}>
+                        <YStack flex={1} space={isAndroid ? 0 : '$1'}>
                             <Text color='$textSecondary' fontSize='$2' fontWeight='bold' textTransform='uppercase'>
                                 Total
                             </Text>

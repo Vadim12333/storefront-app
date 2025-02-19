@@ -27,6 +27,8 @@ const CatalogScreen = ({ route }) => {
     const windowWidth = Dimensions.get('window').width;
     const productCardWidth = windowWidth / 2 - 25;
 
+    console.log('[foodTruckId]', foodTruckId);
+
     const renderProduct = ({ item: product, index }) => (
         <YStack paddingBottom='$4'>
             <ProductCard key={index} product={new Product(product, storefrontAdapter)} sliderHeight={135} style={{ width: productCardWidth }} storeLocationId={foodTruckId} />
@@ -42,7 +44,9 @@ const CatalogScreen = ({ route }) => {
                         {foodTruck.getAttribute('vehicle.plate_number')}
                     </Text>
                 </XStack>
-                <CartButton size={40} onPress={() => navigation.navigate('CartModal')} />
+                <YStack>
+                    <CartButton text='Jump to Cart' onPress={() => navigation.navigate('CartModal')} />
+                </YStack>
             </XStack>
             <ScrollView scrollEventThrottle={16} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
                 <YStack py='$2' px='$3'>

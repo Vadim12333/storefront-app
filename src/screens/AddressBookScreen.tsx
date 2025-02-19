@@ -1,15 +1,16 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Animated, SafeAreaView, Pressable, FlatList, LayoutAnimation, UIManager, Platform } from 'react-native';
 import { Spinner, Avatar, Text, YStack, XStack, Separator, useTheme } from 'tamagui';
-import { toast, ToastPosition } from '@backpackapp-io/react-native-toast';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faChevronRight, faPencilAlt, faTrash, faStar } from '@fortawesome/free-solid-svg-icons';
 import { useNavigation } from '@react-navigation/native';
 import { formattedAddressFromPlace } from '../utils/location';
+import { toast } from '../utils/toast';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import useCurrentLocation from '../hooks/use-current-location';
 import useSavedLocations from '../hooks/use-saved-locations';
 import usePromiseWithLoading from '../hooks/use-promise-with-loading';
+import Spacer from '../components/Spacer';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -118,6 +119,7 @@ const AddressBookScreen = () => {
                     keyExtractor={(item, index) => item.id || index}
                     contentContainerStyle={{ paddingBottom: 16 }}
                     ItemSeparatorComponent={() => <Separator borderBottomWidth={1} borderColor='$borderColorWithShadow' />}
+                    ListFooterComponent={<Spacer height={100} />}
                 />
             </YStack>
         </SafeAreaView>

@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { YStack, useTheme } from 'tamagui';
-import { restoreFleetbasePlace, getCoordinates } from '../utils/location';
+import { restoreFleetbasePlace, getCoordinates, makeCoordinatesFloat } from '../utils/location';
+import { storefrontConfig } from '../utils';
 import LocationMarker from './LocationMarker';
 
 // Utility to calculate deltas from zoom
@@ -56,9 +57,10 @@ const PlaceMapView = ({ place: _place, width = '100%', height = 200, markerSize 
                     zoomEnabled={false}
                     pitchEnabled={false}
                     rotateEnabled={false}
+                    mapType={storefrontConfig('defaultMapType', 'standard')}
                     {...mapViewProps}
                 >
-                    <Marker coordinate={{ latitude, longitude }}>
+                    <Marker coordinate={makeCoordinatesFloat({ latitude, longitude })}>
                         <LocationMarker size={markerSize} />
                     </Marker>
                 </MapView>

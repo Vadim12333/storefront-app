@@ -8,11 +8,13 @@ import { adapter as storefrontAdapter } from '../hooks/use-storefront';
 import { adapter } from '../hooks/use-fleetbase';
 import { haversine } from './math';
 import { config, uniqueArray, isObject, isArray, isEmpty, isResource, isSerializedResource, isPojoResource } from './';
+import { getLocale } from './localize';
 import storage from './storage';
 import axios from 'axios';
 
 const DEFAULT_LATITUDE = 1.369;
 const DEFAULT_LONGITUDE = 103.8864;
+const isAndroid = Platform.OS === 'android';
 
 /** Configure GeoLocation */
 Geolocation.setRNConfiguration({
@@ -28,6 +30,7 @@ export function createGoogleAddress(...args) {
 }
 
 export async function geocode(latitude, longitude, options = {}) {
+    const language = getLocale();
     if (!latitude || !longitude) {
         const fallbackCoordinates = getDefaultCoordinates();
         latitude = fallbackCoordinates.latitude;
@@ -39,13 +42,13 @@ export async function geocode(latitude, longitude, options = {}) {
             params: {
                 latlng: `${latitude},${longitude}`,
                 sensor: false,
-                language: 'en-US',
-                key: config('GOOGLE_MAPS_KEY'),
+                language,
+                key: config('GOOGLE_MAPS_API_KEY'),
             },
         });
 
         if (isEmpty(response.data.results)) {
-            throw new Error('No geocode results for provided coordinates.');
+            throw new Error(`No geocode results for provided coordinates: ${latitude},${longitude}`, response);
         }
 
         // Allow full results
@@ -58,23 +61,24 @@ export async function geocode(latitude, longitude, options = {}) {
         const result = response.data.results[0];
         return options.asGoogleAddress === true ? new GoogleAddress(result) : result;
     } catch (error) {
-        console.error('Geocoding error:', error);
+        console.warn('Geocoding error:', error);
         return null;
     }
 }
 
 export async function geocodeAutocomplete(input, coordinates = null) {
+    const language = getLocale();
+
     try {
         const params = {
             input,
-            // types: 'address', // Restrict results to addresses only
-            language: 'en-US',
-            key: config('GOOGLE_MAPS_KEY'),
+            language,
+            key: config('GOOGLE_MAPS_API_KEY'),
         };
 
         if (isArray(coordinates)) {
             params.location = `${coordinates[0]},${coordinates[1]}`;
-            params.radius = 5000; // 5km radius
+            params.radius = 5000;
         }
 
         const response = await axios.get('https://maps.googleapis.com/maps/api/place/autocomplete/json', {
@@ -94,7 +98,7 @@ export async function geocodeAutocomplete(input, coordinates = null) {
 
         return predictions;
     } catch (error) {
-        console.error('Autocomplete error:', error);
+        console.warn('Autocomplete error:', error);
         return [];
     }
 }
@@ -105,8 +109,7 @@ export async function getPlaceDetails(placeId) {
         const response = await axios.get('https://maps.googleapis.com/maps/api/place/details/json', {
             params: {
                 place_id: placeId,
-                key: config('GOOGLE_MAPS_KEY'),
-                // You can include 'fields' to limit the data retrieved or omit it for all available details
+                key: config('GOOGLE_MAPS_API_KEY'),
                 fields: 'name,formatted_address,geometry,place_id,types,international_phone_number,website,address_components',
             },
         });
@@ -119,7 +122,7 @@ export async function getPlaceDetails(placeId) {
         // Return the full result object from Google
         return response.data.result;
     } catch (error) {
-        console.error('Error fetching place details:', error.message);
+        console.warn(`Error fetching place details for ID: ${placeId}`, error.message);
         return null;
     }
 }
@@ -233,6 +236,12 @@ export function formattedAddressFromPlace(place) {
         place.getAttribute('country'),
     ];
 
+    // Worst case scenario fallback to coordinates
+    if (segments.filter(Boolean).length === 0) {
+        const { latitude, longitude } = getDefaultCoordinates();
+        segments.push(...(place.getAttribute('location.coordinates', [longitude, latitude]) ?? [longitude, latitude]).map((coord) => (coord ? parseFloat(coord).toFixed(4) : coord)));
+    }
+
     return segments.filter(Boolean).join(', ');
 }
 
@@ -270,6 +279,10 @@ export function serializGoogleAddress(googleAddress) {
     return attributes;
 }
 
+export function createPlaceFromCoordinates(latitude, longitude, attributes = {}) {
+    return new Place({ location: new Point(latitude, longitude), ...attributes });
+}
+
 export async function getLiveLocation() {
     return new Promise((resolve) => {
         Geolocation.getCurrentPosition(
@@ -281,14 +294,23 @@ export async function getLiveLocation() {
 
                 try {
                     const details = await geocode(latitude, longitude);
-                    const place = createFleetbasePlaceFromDetails(details, { position });
+                    if (details) {
+                        const place = createFleetbasePlaceFromDetails(details, { position });
+                        // Save the last known location
+                        storage.setMap('_last_known_location', place.serialize());
+                        resolve(place);
+                    } else {
+                        const place = new Place({ location: new Point(latitude, longitude), meta: { position } });
+                        console.warn('Defaulting live location to coordinate based place:', place);
 
-                    // Save the last known location
-                    storage.setMap('_last_known_location', place.serialize());
-
-                    resolve(place);
+                        storage.setMap('_last_known_location', place.serialize());
+                        resolve(place);
+                    }
                 } catch (error) {
+                    console.warn('Error attempting to geocode live/current position:', error);
+
                     const place = new Place({ location: new Point(latitude, longitude), meta: { position } });
+                    console.warn('Defaulting live location to coordinate based place:', place);
 
                     // Save the last known location
                     storage.setMap('_last_known_location', place.serialize());
@@ -296,8 +318,11 @@ export async function getLiveLocation() {
                     resolve(place);
                 }
             },
-            (error) => resolve(null),
-            { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+            (error) => {
+                resolve(null);
+                console.error('Error getting device current position:', error);
+            },
+            { enableHighAccuracy: !isAndroid, timeout: 20000, maximumAge: 3600000 }
         );
     });
 }
@@ -320,19 +345,31 @@ export async function getCurrentLocation() {
 
                 try {
                     const details = await geocode(latitude, longitude);
-                    const place = createFleetbasePlaceFromDetails(details, { position });
+                    if (details) {
+                        const place = createFleetbasePlaceFromDetails(details, { position });
+                        storage.setMap('_current_location', place.serialize());
+                        resolve(place);
+                    } else {
+                        const place = new Place({ location: new Point(latitude, longitude), meta: { position } });
+                        console.warn('Defaulting live location to coordinate based place:', place);
 
-                    storage.setMap('_current_location', place.serialize());
-                    resolve(place);
+                        storage.setMap('_last_known_location', place.serialize());
+                        resolve(place);
+                    }
                 } catch (error) {
                     const place = new Place({ location: new Point(latitude, longitude), meta: { position } });
+                    console.warn('Error attempting to geocode current position:', error);
+                    console.warn('Defaulting current location to coordinate based place:', place);
 
                     storage.setMap('_current_location', place.serialize());
                     resolve(place);
                 }
             },
-            (error) => resolve(null),
-            { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+            (error) => {
+                resolve(null);
+                console.error('Error getting device current position:', error);
+            },
+            { enableHighAccuracy: !isAndroid, timeout: 2000, maximumAge: 3600000 }
         );
     });
 }
@@ -358,10 +395,15 @@ export function getCoordinates(target, options = {}) {
         return getCoordinates(location);
     }
 
+    if (isResource(target, 'food-truck')) {
+        const location = target.getAttribute('vehicle');
+        return getCoordinates(location);
+    }
+
     if (isPojoResource(target) && target.resource === 'place') {
         const [longitude, latitude] =
             typeof target.getAttribute === 'function'
-                ? (target.getAttribute('location').coordinates ?? [fallbackLatitude, fallbackLongitude])
+                ? (target.getAttribute('location.coordinates') ?? [fallbackLatitude, fallbackLongitude])
                 : (target.attributes?.location?.coordinates ?? [fallbackLatitude, fallbackLongitude]);
         return [latitude, longitude];
     }
@@ -398,7 +440,7 @@ export function getCoordinates(target, options = {}) {
     return [fallbackLatitude, fallbackLongitude];
 }
 
-export function getPlaceCoords(place) {
+export function getCoordinatesObject(place) {
     const [latitude, longitude] = getCoordinates(place);
     return { latitude, longitude };
 }
@@ -978,7 +1020,7 @@ export function createFauxPlace() {
  * }
  */
 export function isPointInGeoJSONPolygon(point, polygon) {
-    if (!polygon || polygon.type !== 'Polygon' || !Array.isArray(polygon.coordinates)) {
+    if (!polygon || polygon.type !== 'Polygon' || !isArray(polygon.coordinates)) {
         throw new Error('Invalid GeoJSON polygon');
     }
 
@@ -987,7 +1029,7 @@ export function isPointInGeoJSONPolygon(point, polygon) {
 
     // Get the outer ring (first coordinate array).
     const outerRing = polygon.coordinates[0];
-    if (!Array.isArray(outerRing) || outerRing.length === 0) {
+    if (!isArray(outerRing) || outerRing.length === 0) {
         return false;
     }
 
@@ -1054,4 +1096,64 @@ export function getCurrentLocationFromStorage() {
 export function getLiveLocationLocationFromStorage() {
     const liveLocation = storage.getMap('_live_location');
     return liveLocation ? restoreFleetbasePlace(liveLocation) : null;
+}
+
+export function makeCoordinatesFloat(input) {
+    // Helper to parse a single coordinate (array or object).
+    function parseSingle(coord) {
+        if (isArray(coord) && coord.length >= 2) {
+            const latitude = parseFloat(coord[0]);
+            const longitude = parseFloat(coord[1]);
+            if (isNaN(latitude) || isNaN(longitude)) {
+                throw new Error(`Invalid numeric values in coordinate array: ${JSON.stringify(coord)}`);
+            }
+            return { latitude, longitude };
+        } else if (typeof coord === 'object' && coord !== null) {
+            const newCoord = {};
+            if ('latitude' in coord) {
+                newCoord.latitude = parseFloat(coord.latitude);
+            }
+            if ('longitude' in coord) {
+                newCoord.longitude = parseFloat(coord.longitude);
+            }
+            // Optionally include delta values if present (for regions)
+            if ('latitudeDelta' in coord) {
+                newCoord.latitudeDelta = parseFloat(coord.latitudeDelta);
+            }
+            if ('longitudeDelta' in coord) {
+                newCoord.longitudeDelta = parseFloat(coord.longitudeDelta);
+            }
+            if (isNaN(newCoord.latitude) || isNaN(newCoord.longitude)) {
+                throw new Error(`Invalid numeric values in coordinate object: ${JSON.stringify(coord)}`);
+            }
+            return newCoord;
+        }
+        throw new Error(`Unsupported coordinate format: ${JSON.stringify(coord)}`);
+    }
+
+    // If input is an array...
+    if (isArray(input)) {
+        // Check if it’s an array of coordinates.
+        if (input.length === 0) {
+            return input;
+        }
+        // If the first element is an object or an array (of at least 2 items),
+        // assume it's an array of coordinates.
+        const first = input[0];
+        if ((isArray(first) && first.length >= 2) || (typeof first === 'object' && first !== null && 'latitude' in first)) {
+            return input.map((coord) => parseSingle(coord));
+        }
+        // Otherwise, if the array itself has 2 items, assume it’s a single coordinate.
+        if (input.length === 2) {
+            return parseSingle(input);
+        }
+        throw new Error(`Array format not recognized for coordinates: ${JSON.stringify(input)}`);
+    }
+
+    // If input is an object, assume it's a single coordinate/region.
+    if (typeof input === 'object' && input !== null) {
+        return parseSingle(input);
+    }
+
+    throw new Error(`Unsupported type for coordinates: ${typeof input}`);
 }

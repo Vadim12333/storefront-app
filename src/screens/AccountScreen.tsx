@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { SafeAreaView, FlatList, Pressable, ScrollView } from 'react-native';
+import { SafeAreaView, FlatList, Pressable, ScrollView, Linking } from 'react-native';
 import { Spinner, Avatar, Text, YStack, XStack, Separator, Button, useTheme } from 'tamagui';
-import { toast, ToastPosition } from '@backpackapp-io/react-native-toast';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import { showActionSheet, abbreviateName } from '../utils';
+import { showActionSheet, abbreviateName, storefrontConfig } from '../utils';
+import { toast } from '../utils/toast';
 import { titleize } from '../utils/format';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -23,12 +23,26 @@ const AccountScreen = () => {
 
     const handleClearCache = () => {
         storage.clearStore();
-        toast.success(t('AccountScreen.cacheCleared'), { position: ToastPosition.BOTTOM });
+        toast.success(t('AccountScreen.cacheCleared'));
     };
 
     const handleSignout = () => {
         logout();
         toast.success(t('AccountScreen.signedOut'));
+    };
+
+    const handleOpenTermsOfService = () => {
+        const termsUrl = storefrontConfig('termsUrl');
+        if (termsUrl) {
+            Linking.openURL(termsUrl);
+        }
+    };
+
+    const handleOpenPrivacyPolicy = () => {
+        const privacyUrl = storefrontConfig('privacyUrl');
+        if (privacyUrl) {
+            Linking.openURL(privacyUrl);
+        }
     };
 
     const handleChangeProfilePhoto = () => {
@@ -72,9 +86,7 @@ const AccountScreen = () => {
                 if (buttonIndex !== options.length - 1) {
                     const selectedScheme = schemes[buttonIndex];
                     changeScheme(selectedScheme);
-                    toast.success(t('AccountScreen.schemeChanged', { selectedScheme }), {
-                        position: ToastPosition.BOTTOM,
-                    });
+                    toast.success(t('AccountScreen.schemeChanged', { selectedScheme }));
                 }
             },
         });
@@ -89,9 +101,7 @@ const AccountScreen = () => {
                 if (buttonIndex !== options.length - 1) {
                     const selectedLanguage = languages[buttonIndex];
                     setLocale(selectedLanguage.code);
-                    toast.success(t('AccountScreen.languageChanged', { selectedLanguage: selectedLanguage.native }), {
-                        position: ToastPosition.BOTTOM,
-                    });
+                    toast.success(t('AccountScreen.languageChanged', { selectedLanguage: selectedLanguage.native }));
                 }
             },
         });
@@ -192,7 +202,7 @@ const AccountScreen = () => {
         {
             title: t('AccountScreen.termsOfService'),
             rightComponent: null,
-            onPress: () => navigation.navigate('TermsOfService'),
+            onPress: handleOpenTermsOfService,
         },
     ];
 
@@ -201,7 +211,7 @@ const AccountScreen = () => {
         {
             title: t('AccountScreen.privacyPolicy'),
             rightComponent: null,
-            onPress: () => navigation.navigate('PrivacyPolicy'),
+            onPress: handleOpenPrivacyPolicy,
         },
         {
             title: t('AccountScreen.clearCache'),

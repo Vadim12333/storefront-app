@@ -7,7 +7,7 @@ import { XStack, YStack, Text, useTheme } from 'tamagui';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faMapLocationDot, faTruck, faCircleInfo, faHome } from '@fortawesome/free-solid-svg-icons';
 import { Vehicle } from '@fleetbase/sdk';
-import { restoreFleetbasePlace, getCoordinates, isPointInGeoJSONPolygon, formattedAddressFromPlace } from '../utils/location';
+import { restoreFleetbasePlace, getCoordinates, getCoordinatesObject, isPointInGeoJSONPolygon, formattedAddressFromPlace, makeCoordinatesFloat } from '../utils/location';
 import { storefrontConfig, isArray, isNone, hexToRGBA } from '../utils';
 import useFleetbase from '../hooks/use-fleetbase';
 import useStorefront from '../hooks/use-storefront';
@@ -15,6 +15,10 @@ import useStorage from '../hooks/use-storage';
 import useAppTheme from '../hooks/use-app-theme';
 import useCurrentLocation from '../hooks/use-current-location';
 import VehicleMarker from '../components/VehicleMarker';
+import CustomHeader from '../components/CustomHeader';
+import LocationPicker from '../components/LocationPicker';
+import CartButton from '../components/CartButton';
+import LocaleButton from '../components/LocaleButton';
 
 function findCurrentZone(coordinates, zones = []) {
     return zones.find((zone) => {
@@ -188,7 +192,21 @@ const FoodTruckScreen = () => {
             mapRef.current.animateToRegion(newRegion, 1000);
         }
 
-        navigation.navigate('Catalog', { catalogs: foodTruck.catalogs, foodTruck: foodTruck });
+        navigation.navigate('Catalog', { catalogs: foodTruck.catalogs, foodTruckId: foodTruck.id });
+    };
+
+    const handlePressCurrentLocation = (currentLocation) => {
+        const [longitude, latitude] = currentLocation.getAttribute('location.coordinates');
+
+        if (mapRef.current && !isNone(latitude) && !isNone(longitude)) {
+            const newRegion = {
+                latitude,
+                longitude,
+                latitudeDelta: 0.01,
+                longitudeDelta: 0.01,
+            };
+            mapRef.current.animateToRegion(newRegion, 1000);
+        }
     };
 
     const handlePressCurrentZone = () => {
@@ -243,7 +261,12 @@ const FoodTruckScreen = () => {
 
     return (
         <YStack flex={1} alignItems='center' justifyContent='center' bg='$surface' width='100%' height='100%'>
-            <MapView ref={mapRef} style={{ ...StyleSheet.absoluteFillObject, width: '100%', height: '100%', zIndex: 1 }} initialRegion={mapRegion}>
+            <MapView
+                ref={mapRef}
+                style={{ ...StyleSheet.absoluteFillObject, width: '100%', height: '100%', zIndex: 1 }}
+                initialRegion={makeCoordinatesFloat(mapRegion)}
+                mapType={storefrontConfig('defaultMapType', 'standard')}
+            >
                 {availableFoodTrucks.map((foodTruck) => (
                     <VehicleMarker key={foodTruck.id} vehicle={new Vehicle(foodTruck.vehicle, fleetbaseAdapter)} onPress={() => handlePressFoodTruck(foodTruck)}>
                         <YStack opacity={0.9} mt='$2' bg='$background' borderRadius='$6' px='$2' py='$1' alignItems='center' justifyContent='center'>
@@ -254,7 +277,10 @@ const FoodTruckScreen = () => {
                     </VehicleMarker>
                 ))}
                 {currentLocation && (
-                    <Marker coordinate={{ latitude: currentLocationCoordinates[0], longitude: currentLocationCoordinates[1] }}>
+                    <Marker
+                        coordinate={makeCoordinatesFloat({ latitude: currentLocationCoordinates[0], longitude: currentLocationCoordinates[1] })}
+                        onPress={() => handlePressCurrentLocation(currentLocation)}
+                    >
                         <YStack alignItems='center' justifyContent='center'>
                             <YStack bg='$blue-600' padding='$2' alignItems='center' justifyContent='center' borderRadius='$4'>
                                 <FontAwesomeIcon icon={faHome} color={theme['$blue-100'].val} size={25} />
@@ -273,7 +299,7 @@ const FoodTruckScreen = () => {
                 )}
                 {!isNone(currentZone) && (
                     <Polygon
-                        coordinates={getPolygonCoordinates(currentZone.border)}
+                        coordinates={makeCoordinatesFloat(getPolygonCoordinates(currentZone.border))}
                         strokeWidth={2}
                         strokeColor={currentZone.stroke_color}
                         fillColor={hexToRGBA(currentZone.color, 0.05)}
@@ -281,49 +307,65 @@ const FoodTruckScreen = () => {
                     />
                 )}
             </MapView>
-            <YStack position='absolute' top={0} left={0} right={0} zIndex={9} paddingTop={headerHeight} px='$4'>
-                <YStack bg='$background' borderRadius='$5'>
-                    <XStack alignItems='center' py='$4' px='$4' borderBottomWidth={1} borderColor='$borderColor'>
-                        <YStack width={32}>
-                            <FontAwesomeIcon icon={faCircleInfo} color={infoColor} size={20} />
-                        </YStack>
-                        <XStack flex={1}>
-                            <Text color={infoColor} fontSize={15} numberOfLines={1}>
-                                Tap trucks on the map to view products.
-                            </Text>
+            <YStack position='absolute' top={0} left={0} right={0} zIndex={10}>
+                <CustomHeader
+                    headerRowProps={{ px: '$4' }}
+                    headerTransparent={true}
+                    headerShadowVisible={false}
+                    headerLeft={
+                        <LocationPicker onPressAddNewLocation={({ navigation, params }) => navigation.navigate('AddNewLocation', params)} redirectToAfterAddLocation={'FoodTruckHome'} />
+                    }
+                    headerRight={
+                        <XStack space='$4' alignItems='center'>
+                            <CartButton onPress={({ navigation }) => navigation.navigate('CartModal')} />
+                            <LocaleButton blur={true} />
                         </XStack>
-                    </XStack>
-                    <Pressable onPress={handlePressCurrentZone}>
-                        <XStack py='$4' px='$4'>
+                    }
+                />
+                <YStack px='$4'>
+                    <YStack bg='$background' borderRadius='$5'>
+                        <XStack alignItems='center' py='$4' px='$4' borderBottomWidth={1} borderColor='$borderColor'>
                             <YStack width={32}>
-                                <FontAwesomeIcon icon={faMapLocationDot} color={currentZoneColor} size={20} />
+                                <FontAwesomeIcon icon={faCircleInfo} color={infoColor} size={20} />
                             </YStack>
-                            <YStack flex={1}>
-                                <Text color={currentZoneColor} fontSize={15} numberOfLines={1}>
-                                    {currentZone ? `Your zone is: ` : 'Out of zone, delivery unavailable 🙁'}
+                            <XStack flex={1}>
+                                <Text color={infoColor} fontSize={15} numberOfLines={1}>
+                                    Tap trucks on the map to view products.
                                 </Text>
-                                {currentZone && (
-                                    <Text fontWeight='bold' color={currentZoneColor} fontSize={15} numberOfLines={1}>
-                                        {currentZone.name}
-                                    </Text>
-                                )}
-                            </YStack>
+                            </XStack>
                         </XStack>
-                    </Pressable>
-                    {availableFoodTrucks.map((foodTruck) => (
-                        <Pressable key={foodTruck.id} onPress={() => handlePressFoodTruck(foodTruck)}>
-                            <XStack py='$4' px='$4' alignItems='center' borderTopWidth={1} borderColor='$borderColor'>
+                        <Pressable onPress={handlePressCurrentZone}>
+                            <XStack py='$4' px='$4'>
                                 <YStack width={32}>
-                                    <FontAwesomeIcon icon={faTruck} color={theme['$textPrimary'].val} size={20} />
+                                    <FontAwesomeIcon icon={faMapLocationDot} color={currentZoneColor} size={20} />
                                 </YStack>
-                                <XStack flex={1}>
-                                    <Text color='$textPrimary' fontSize={15} numberOfLines={1}>
-                                        Truck: {foodTruck.vehicle.plate_number}
+                                <YStack flex={1}>
+                                    <Text color={currentZoneColor} fontSize={15} numberOfLines={1}>
+                                        {currentZone ? `Your zone is: ` : 'Out of zone, delivery unavailable 🙁'}
                                     </Text>
-                                </XStack>
+                                    {currentZone && (
+                                        <Text fontWeight='bold' color={currentZoneColor} fontSize={15} numberOfLines={1}>
+                                            {currentZone.name}
+                                        </Text>
+                                    )}
+                                </YStack>
                             </XStack>
                         </Pressable>
-                    ))}
+                        {availableFoodTrucks.map((foodTruck) => (
+                            <Pressable key={foodTruck.id} onPress={() => handlePressFoodTruck(foodTruck)}>
+                                <XStack py='$4' px='$4' alignItems='center' borderTopWidth={1} borderColor='$borderColor'>
+                                    <YStack width={32}>
+                                        <FontAwesomeIcon icon={faTruck} color={theme['$textPrimary'].val} size={20} />
+                                    </YStack>
+                                    <XStack flex={1}>
+                                        <Text color='$textPrimary' fontSize={15} numberOfLines={1}>
+                                            Truck: {foodTruck.vehicle.plate_number}
+                                        </Text>
+                                    </XStack>
+                                </XStack>
+                            </Pressable>
+                        ))}
+                    </YStack>
                 </YStack>
             </YStack>
         </YStack>
