@@ -21,6 +21,8 @@ import PhoneLoginScreen from '../screens/PhoneLoginScreen';
 import PhoneLoginVerifyScreen from '../screens/PhoneLoginVerifyScreen';
 import CreateAccountScreen from '../screens/CreateAccountScreen';
 import CreateAccountVerifyScreen from '../screens/CreateAccountVerifyScreen';
+import DeleteAccountScreen from '../screens/DeleteAccountScreen';
+import DeleteAccountVerifyScreen from '../screens/DeleteAccountVerifyScreen';
 import AccountScreen from '../screens/AccountScreen';
 import StripeCustomerScreen from '../screens/StripeCustomerScreen';
 import EditAccountPropertyScreen from '../screens/EditAccountPropertyScreen';
@@ -273,6 +275,24 @@ export const StoreProfileTab = createNativeStackNavigator({
                 };
             },
         },
+        DeleteAccount: {
+            if: useIsAuthenticated,
+            screen: DeleteAccountScreen,
+            options: ({ route, navigation }) => {
+                return {
+                    headerShown: false,
+                };
+            },
+        },
+        DeleteAccountVerify: {
+            if: useIsAuthenticated,
+            screen: DeleteAccountVerifyScreen,
+            options: ({ route, navigation }) => {
+                return {
+                    headerShown: false,
+                };
+            },
+        },
         Login: {
             if: useIsNotAuthenticated,
             screen: LoginScreen,
@@ -330,7 +350,7 @@ const StoreNavigator = createBottomTabNavigator({
         const { isDarkMode } = useAppTheme();
         const theme = useTheme();
         const background = storefrontConfig('storeNavigator.tabBarBackgroundColor', 'blur');
-        const backgroundColor = background === 'blur' ? (isAndroid ? theme['background'].val : 'transparent') : theme[background].val;
+        const backgroundColor = config('CUSTOM_TAB_BAR_BG_COLOR', background === 'blur' ? (isAndroid ? theme['background'].val : 'transparent') : theme[background].val);
         const borderColor = background === 'blur' ? (isAndroid ? theme['borderColor'].val : 'transparent') : theme[`${background}Border`].val;
         const activeColor = background === 'blur' ? config('CUSTOM_TAB_BAR_ACTIVE_COLOR', theme.primary.val) : theme[`${background}Text`].val;
         const inactiveColor = background === 'blur' ? config('CUSTOM_TAB_BAR_INACTIVE_COLOR', theme.secondary.val) : adjustOpacity(theme[`${background}Text`].val, isDarkMode ? 0.5 : 1);
