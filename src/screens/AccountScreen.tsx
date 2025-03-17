@@ -224,7 +224,7 @@ const AccountScreen = () => {
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.background.val }}>
             <ScrollView showsVerticalScrollIndicator={false}>
                 <AbsoluteTabBarScreenWrapper>
-                    <YStack flex={1} bg='$background' space='$8' pt='$8'>
+                    <YStack flex={1} bg='$background' space='$8' pt='$3'>
                         <YStack space='$2'>
                             <XStack px='$3' justifyContent='space-between'>
                                 <YStack>
@@ -261,7 +261,7 @@ const AccountScreen = () => {
                             />
                         </YStack>
                         <YStack padding='$4' mb='$5'>
-                            <Button marginTop='$4' bg='$error' borderColor='$errorBorder' borderWidth={1} size='$5' onPress={handleSignout} rounded width='100%'>
+                            <Button marginTop='$4' bg='$error' borderColor='$errorBorder' borderWidth={1} size='$5' onPress={handleSignout} rounded='true' width='100%'>
                                 <Button.Icon>{isSigningOut ? <Spinner color='$errorText' /> : <YStack />}</Button.Icon>
                                 <Button.Text color='$errorText' fontWeight='bold'>
                                     {t('AccountScreen.signOut')}

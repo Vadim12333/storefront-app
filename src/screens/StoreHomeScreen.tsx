@@ -12,9 +12,9 @@ import useStorefrontInfo from '../hooks/use-storefront-info';
 import LocationPicker from '../components/LocationPicker';
 import CustomHeader from '../components/CustomHeader';
 import Spacer from '../components/Spacer';
-import { storefrontConfig } from '../utils';
+import { storefrontConfig, handleNavigateNewLocation } from '../utils';
 
-const StoreHome = ({ route }) => {
+const StoreHomeScreen = ({ route }) => {
     const theme = useTheme();
     const navigation = useNavigation();
     const customHeaderHeight = 270;
@@ -58,7 +58,7 @@ const StoreHome = ({ route }) => {
                     headerRowProps={{ px: '$3' }}
                     headerTransparent={true}
                     headerStyle={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 99 }}
-                    headerLeft={<LocationPicker onPressAddNewLocation={({ params }) => navigation.navigate('AddNewLocation', params)} />}
+                    headerLeft={<LocationPicker onPressAddNewLocation={({ params }) => handleNavigateNewLocation(navigation, params)} />}
                     headerLeftStyle={{ justifyContent: 'flex-start' }}
                 />
                 <StoreHeader storeName={info.name} logoUrl={info.logo_url} backgroundUrl={info.backdrop_url} description={info.description} height={customHeaderHeight} />
@@ -106,4 +106,4 @@ const StoreHome = ({ route }) => {
     );
 };
 
-export default StoreHome;
+export default StoreHomeScreen;

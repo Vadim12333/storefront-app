@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView } from 'react-native';
+import { ScrollView, Platform } from 'react-native';
 import { Spinner, Image, Text, View, YStack, XStack, Button, Paragraph, Label, RadioGroup, Checkbox, useTheme } from 'tamagui';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faTimes, faAsterisk, faCheck } from '@fortawesome/free-solid-svg-icons';
@@ -43,7 +43,7 @@ const ProductScreen = ({ route = {} }) => {
     const [quantity, setQuantity] = useState(route.params.quantity ?? 1);
     const [ready, setReady] = useState(false);
     const storeLocationId = params.storeLocationId ?? null;
-    const isModal = params.isModal ?? true;
+    const isModal = Platform.OS === 'web' ? false : (params.isModal ?? true);
     const hasOptions = product.variants().length > 0 && product.addons().length > 0;
     const hasYoutubeVideos = youtubeUrls.length > 0;
 
@@ -62,7 +62,7 @@ const ProductScreen = ({ route = {} }) => {
 
     const handleAddToCart = async () => {
         if (isLoading('addToCart') || !isProductReadyForCheckout(product, selectedVariants)) {
-            console.log('Product is not ready for checkout');
+            console.warn('Product is not ready for checkout');
             return;
         }
 
@@ -76,7 +76,7 @@ const ProductScreen = ({ route = {} }) => {
             toast.success(t('ProductScreen.productAddedToCart', { productName: product.getAttribute('name') }));
             navigation.goBack();
         } catch (error) {
-            console.log('Error Adding to Cart', error.message);
+            console.warn('Error Adding to Cart', error.message);
         }
     };
 

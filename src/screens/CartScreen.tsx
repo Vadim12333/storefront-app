@@ -315,14 +315,14 @@ const CartScreen = ({ route }) => {
                     <XStack alignItems='center' justifyContent='space-between'>
                         <YStack flex={1} space={isAndroid ? 0 : '$1'}>
                             <Text color='$textSecondary' fontSize='$2' fontWeight='bold' textTransform='uppercase'>
-                                {t('lineItems.total')}
+                                {t('lineItems.subtotal')}
                             </Text>
                             <Text color='$textPrimary' fontSize='$9' fontWeight='bold'>
                                 {formatCurrency(calculateCartTotal(), cart.getAttribute('currency'))}
                             </Text>
                         </YStack>
                         <YStack>
-                            <Button onPress={handleCheckout} bg='$success' borderColor='$successBorder' borderWidth={1} width={180} paddingVertical='$2' rounded>
+                            <Button onPress={handleCheckout} bg='$success' borderColor='$successBorder' borderWidth={1} width={180} paddingVertical='$2' rounded='true'>
                                 <Button.Text fontSize='$6' fontWeight='bold' color='$successText'>
                                     {t('CartScreen.checkout')}
                                 </Button.Text>
