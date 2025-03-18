@@ -14,6 +14,7 @@ export const DefaultConfig = {
     defaultMapType: config('DEFAULT_MAP_TYPE', 'standard'),
     defaultServiceArea: config('DEFAULT_SERVICE_AREA'),
     defaultLocale: config('DEFAULT_LOCALE', 'en'),
+    availableLocales: toArray(config('AVAILABLE_LOCALES', 'en,mn')),
     paymentGateway: config('PAYMENT_GATEWAY', 'stripe'),
     incrementTipBy: config('TIP_INCREMENT', 50),
     stripePaymentMethod: config('STRIPE_PAYMENT_UI', 'sheet'), // `sheet` or `field`
@@ -21,6 +22,7 @@ export const DefaultConfig = {
         applePay: toBoolean(config('STRIPE_ENABLE_APPLE_PAY', false)),
         googlePay: toBoolean(config('STRIPE_ENABLE_GOOGLE_PAY', false)),
     },
+    disableGeocodingScreen: toBoolean(config('DISABLE_GEOCODING_SCREEN', false)),
     showDriversOnMap: toBoolean(config('MAP_DISPLAY_DRIVERS', false)),
     prioritizePickup: toBoolean(config('PRIORITIZE_PICKUP', false)),
     storeCategoriesDisplay: config('STORE_CATEGORIES_DISPLAY', 'grid'), // `pills` or `grid`

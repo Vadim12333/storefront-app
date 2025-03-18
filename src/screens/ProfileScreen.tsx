@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { abbreviateName, storefrontConfig } from '../utils';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import storage from '../utils/storage';
 
 const PAYMENT_GATEWAYS_NO_PAYMENT_METHODS = ['qpay'];
@@ -13,6 +14,7 @@ const ProfileScreen = () => {
     const theme = useTheme();
     const navigation = useNavigation();
     const { customer, logout } = useAuth();
+    const { t } = useLanguage();
 
     const handleManagePaymentMethods = useCallback(() => {
         if (storefrontConfig('paymentGateway') === 'stripe') {
@@ -37,16 +39,16 @@ const ProfileScreen = () => {
 
     const menuItems = useMemo(() => {
         const items = [
-            { id: '1', title: 'Order History', screen: 'OrderHistory' },
-            { id: '2', title: 'Account', screen: 'Account' },
+            { id: '1', title: t('ProfileScreen.orderHistory'), screen: 'OrderHistory' },
+            { id: '2', title: t('ProfileScreen.account'), screen: 'Account' },
             {
                 id: '3',
-                title: 'Payment Methods',
+                title: t('ProfileScreen.paymentMethods'),
                 screen: 'PaymentMethods',
                 handler: handleManagePaymentMethods,
                 hidden: PAYMENT_GATEWAYS_NO_PAYMENT_METHODS.includes(storefrontConfig('paymentGateway')),
             },
-            { id: '4', title: 'Address Book', screen: 'AddressBook' },
+            { id: '4', title: t('ProfileScreen.addressBook'), screen: 'AddressBook' },
         ];
 
         return items.filter((item) => !item.hidden);
@@ -72,19 +74,19 @@ const ProfileScreen = () => {
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.background.val }}>
-            <YStack flex={1} bg='$background' space='$3' padding='$5'>
+            <YStack flex={1} bg='$background' space='$3' px='$5'>
                 <XStack paddingVertical='$3' alignItems='center' justifyContent='space-between'>
                     <YStack>
                         <Text fontSize='$7' fontWeight='bold' color='$textPrimary' numberOfLines={1}>
-                            Hi {customer.getAttribute('name')}!
+                            {t('ProfileScreen.greeting', { customerName: customer.getAttribute('name') })}
                         </Text>
                     </YStack>
                     <YStack>
                         <Pressable onPress={handleViewProfile}>
                             <Avatar circular size='$7'>
                                 <Avatar.Image accessibilityLabel={customer.getAttribute('name')} src={customer.getAttribute('photo_url')} />
-                                <Avatar.Fallback backgroundColor='$primary'>
-                                    <Text fontSize='$5' fontWeight='bold' color='$white' textTransform='uppercase'>
+                                <Avatar.Fallback delayMs={800} backgroundColor='$primary' textAlign='center' alignItems='center' justifyContent='center'>
+                                    <Text fontSize='$8' fontWeight='bold' color='$white' textTransform='uppercase' textAlign='center'>
                                         {abbreviateName(customer.getAttribute('name'))}
                                     </Text>
                                 </Avatar.Fallback>

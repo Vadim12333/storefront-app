@@ -15,10 +15,12 @@ import useStorefrontInfo from '../hooks/use-storefront-info';
 import useSocketClusterClient from '../hooks/use-socket-cluster-client';
 import useCart from '../hooks/use-cart';
 import useStorage from '../hooks/use-storage';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export default function useQPayCheckout({ onOrderComplete }) {
     const { storefront, adapter } = useStorefront();
     const { info } = useStorefrontInfo();
+    const { t } = useLanguage();
     const { customer, updateCustomerMeta } = useAuth();
     const { currentLocation: deliveryLocation, updateDefaultLocation } = useCurrentLocation();
     const { currentStoreLocation } = useStoreLocations();
@@ -35,6 +37,7 @@ export default function useQPayCheckout({ onOrderComplete }) {
     const [checkoutId, setCheckoutId] = useState();
     const [checkoutToken, setCheckoutToken] = useState();
     const [serviceQuote, setServiceQuote] = useState(null);
+    const [isServiceQuoteUnavailable, setIsServiceQuoteUnavailable] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [isCapturingOrder, setIsCapturingOrder] = useState(false);
     const [error, setError] = useState(false);
@@ -56,14 +59,14 @@ export default function useQPayCheckout({ onOrderComplete }) {
     function computeLineItems() {
         const baseItems = [
             {
-                name: 'Cart Subtotal',
+                name: t('lineItems.cartSubtotal'),
                 value: subtotal,
             },
         ];
 
         if (checkoutOptions.leavingTip) {
             baseItems.push({
-                name: 'Tip',
+                name: t('lineItems.tip'),
                 value: calculateTip(checkoutOptions.tip, subtotal),
                 tip: checkoutOptions.tip,
             });
@@ -71,7 +74,7 @@ export default function useQPayCheckout({ onOrderComplete }) {
 
         if (checkoutOptions.leavingDeliveryTip) {
             baseItems.push({
-                name: 'Delivery Tip',
+                name: t('lineItems.deliveryTip'),
                 value: calculateTip(checkoutOptions.deliveryTip, subtotal),
                 tip: checkoutOptions.deliveryTip,
             });
@@ -80,12 +83,17 @@ export default function useQPayCheckout({ onOrderComplete }) {
         if (!checkoutOptions.pickup) {
             if (serviceQuote) {
                 baseItems.push({
-                    name: 'Service Fee',
+                    name: t('lineItems.serviceFee'),
                     value: serviceQuote.getAttribute('amount'),
+                });
+            } else if (isServiceQuoteUnavailable) {
+                baseItems.push({
+                    name: t('lineItems.serviceFee'),
+                    value: 0,
                 });
             } else if (deliveryLocation?.id) {
                 baseItems.push({
-                    name: 'Service Fee',
+                    name: t('lineItems.serviceFee'),
                     value: 0,
                     loading: true,
                 });
@@ -94,14 +102,14 @@ export default function useQPayCheckout({ onOrderComplete }) {
 
         const total = baseItems.reduce((acc, item) => acc + numbersOnly(item.value), 0);
         baseItems.push({
-            name: 'Total',
+            name: t('lineItems.total'),
             value: total,
         });
 
         return baseItems;
     }
 
-    const lineItems = useMemo(() => computeLineItems(), [checkoutOptions, subtotal, serviceQuote]);
+    const lineItems = useMemo(() => computeLineItems(), [checkoutOptions, subtotal, serviceQuote, isServiceQuoteUnavailable]);
 
     // Memoize store location and food truck IDs based on cart contents
     const storeLocationId = useMemo(() => {
@@ -227,6 +235,7 @@ export default function useQPayCheckout({ onOrderComplete }) {
     // Fetch service quote when cart or delivery location changes
     useEffect(() => {
         if (!cart) return;
+
         let isMounted = true;
         const destination = deliveryLocation.isSaved ? deliveryLocation : getCoordinates(deliveryLocation);
         const fetchServiceQuote = async () => {
@@ -237,8 +246,8 @@ export default function useQPayCheckout({ onOrderComplete }) {
                     setServiceQuote(quote);
                 }
             } catch (error) {
-                toast.error('Unable to calculate delivery fee.');
-                console.error('Error fetching service quote:', error);
+                setIsServiceQuoteUnavailable(true);
+                console.warn('Error fetching service quote:', error);
             }
         };
 
@@ -301,13 +310,13 @@ export default function useQPayCheckout({ onOrderComplete }) {
         };
     }, [checkPaymentStatus]);
 
-    // Memoize the return value to provide stable references if needed
-    const api = useMemo(
+    // Memoize the return value to provide stable references
+    const checkout = useMemo(
         () => ({
             cart,
             storefront,
             customer,
-            totalAmount: lineItems.find((item) => item.name === 'Total')?.value || 0,
+            totalAmount: lineItems.find((item) => item.name === t('lineItems.total'))?.value || 0,
             lineItems,
             checkoutOptions,
             serviceQuote,
@@ -332,6 +341,7 @@ export default function useQPayCheckout({ onOrderComplete }) {
             listener: listenerRef.current,
             hasOrderCompleted: hasOrderCompleted.current,
             isCapturingOrder,
+            isServiceQuoteUnavailable,
         }),
         [
             cart,
@@ -352,8 +362,9 @@ export default function useQPayCheckout({ onOrderComplete }) {
             storeLocationId,
             hasOrderCompleted.current,
             isCapturingOrder,
+            isServiceQuoteUnavailable,
         ]
     );
 
-    return api;
+    return checkout;
 }

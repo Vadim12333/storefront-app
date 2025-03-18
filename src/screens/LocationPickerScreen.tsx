@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faMapLocation, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import BottomSheet, { BottomSheetView, BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import { Portal } from '@gorhom/portal';
-import { Place } from '@fleetbase/sdk';
+import { Place, Point } from '@fleetbase/sdk';
 import { useNavigation } from '@react-navigation/native';
 import {
     getDefaultCoordinates,
@@ -18,6 +18,7 @@ import {
     getCoordinates,
 } from '../utils/location';
 import { isArray, toBoolean, later, storefrontConfig } from '../utils';
+import { useLanguage } from '../contexts/LanguageContext';
 import LocationMarker from '../components/LocationMarker';
 import useStorefront from '../hooks/use-storefront';
 import useCurrentLocation from '../hooks/use-current-location';
@@ -41,6 +42,7 @@ const LocationPickerScreen = ({ route }) => {
     const navigation = useNavigation();
     const theme = useTheme();
     const { storefront } = useStorefront();
+    const { t } = useLanguage();
     const bottomSheetRef = useRef<BottomSheet>(null);
     const initialLocation = getLocationFromRouteOrStorage('initialLocation', params);
     const [latitude, longitude] = getCoordinates(initialLocation);
@@ -110,7 +112,7 @@ const LocationPickerScreen = ({ route }) => {
         closeBottomSheet();
         const geocoded = results[0] ?? new Place();
         const place = new Place({
-            location: [mapRegion.latitude, mapRegion.longitude],
+            location: new Point(mapRegion.latitude, mapRegion.longitude),
             street1: geocoded.getAttribute('street1'),
             city: geocoded.getAttribute('city'),
             province: geocoded.getAttribute('province'),
@@ -182,9 +184,9 @@ const LocationPickerScreen = ({ route }) => {
                                     </YStack>
                                     <YStack>
                                         <Text color='$primary' fontWeight='bold' numberOfLines={1}>
-                                            Use Marker Position
+                                            {t('LocationPickerScreen.useMarkerPosition')}
                                         </Text>
-                                        <Text color='$blue-500'>Use exact marker position</Text>
+                                        <Text color='$blue-500'>{t('LocationPickerScreen.useExactMarkerPosition')}</Text>
                                     </YStack>
                                 </XStack>
                             </Button>

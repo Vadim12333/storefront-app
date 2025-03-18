@@ -32,7 +32,7 @@
 				<string>$(APP_LINK_PREFIX)</string>
 				<string>fb$(FACEBOOK_APP_ID)</string>
 				<string>$(APP_IDENTIFIER)</string>
-				<string>com.googleusercontent.apps.$(GOOGLE_IOS_CLIENT_ID)</string> 
+				<string>com.googleusercontent.apps.$(GOOGLE_IOS_CLIENT_ID)</string>
 			</array>
 		</dict>
 	</array>
@@ -64,9 +64,14 @@
 		<string>ard</string>
 		<string>arig</string>
 		<string>Monpay</string>
+		<string>fb</string>
+		<string>facebook</string>
 		<string>fbapi</string>
 		<string>fbauth2</string>
 		<string>fb-messenger-share-api</string>
+		<string>instagram</string>
+		<string>x</string>
+		<string>twitter</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
@@ -105,16 +110,16 @@
 	<string>This app may need to access your contacts for sharing</string>
 	<key>NSLocalUsageDescription</key>
 	<string>This app requires access to send you notifications about order status updates and
-		other important information.</string>
+	other important information.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>This app requires access to your location to provide create user address for order
-		when the app is in use</string>
+	when the app is in use</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>This app requires access to your location to provide create user address for order
-		when the app is in use</string>
+	when the app is in use</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This app requires access to your location to provide create user address for order
-		when the app is in use</string>
+	when the app is in use</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app allows you to upload photos from your photo library</string>
 	<key>NSUserAuthenticationUsageDescription</key>

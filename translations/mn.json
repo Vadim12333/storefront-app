@@ -1,60 +1,361 @@
 {
     "common": {
         "fleetbase": "Fleetbase",
-        "storefront": "Дэлгүүрийн нүүр хуудас",
+        "storefront": "Storefront",
         "apiKey": "API түлхүүр",
         "cancel": "Цуцлах",
         "new": "Шинэ",
         "create": "Үүсгэх",
+        "save": "Хадгалах",
         "delete": "Устгах",
-        "edit": "Засах"
+        "edit": "Засах",
+        "update": "Шинэчлэх",
+        "service": "Үйлчилгээ",
+        "retry": "Дахин оролдох",
+        "loading": "Ачааллаж байна...",
+        "confirm": "Баталгаажуулах",
+        "confirmation": "Баталгаажуулалт",
+        "ok": "ОК",
+        "done": "Дууссан"
+    },
+    "lineItems": {
+        "cartSubtotal": "Сагсан дахь үнэ",
+        "subtotal": "Сагсны үнэ",
+        "total": "Сагсны үнэ",
+        "deliveryFee": "Хүргэлтийн төлбөр",
+        "deliveryTip": "Хүргэлтийн урамшуулал",
+        "tip": "Гарын мөнгө",
+        "serviceFee": "Үйлчилгээний төлбөр"
     },
     "orderStatuses": {
         "created": "Үүсгэсэн",
         "preparing": "Бэлтгэж байна",
-        "dispatched": "Илгээсэн",
-        "driver_enroute": "Жолооч замдаа явж байна",
+        "dispatched": "Хуваарилсан",
+        "driver_enroute": "Жолооч зам дээр",
         "pending": "Хүлээгдэж байна",
-        "in_progress": "Явагдаж байна",
+        "in_progress": "Гүйцэтгэж байна",
         "completed": "Дууссан"
     },
+    "tabs": {
+        "Home": "Нүүр",
+        "Search": "Хайх",
+        "Map": "Газрын зураг",
+        "Cart": "Сагс",
+        "Profile": "Профайл",
+        "Trucks": "Ачааны машин"
+    },
     "BootScreen": {
-        "missingRequiredConfigurationKeys": "Шаардлагатай тохиргооны түлхүүрүүд дутуу байна"
+        "missingRequiredConfigurationKeys": "Шаардлагатай тохиргоо дутуу байна"
     },
     "AccountScreen": {
         "changeProfilePhotoOptions": {
             "takePhoto": "Зураг авах",
             "photoLibrary": "Зургийн сан",
-            "deleteProfilePhoto": "Профайлын зургийг устгах"
+            "deleteProfilePhoto": "Профайл зургийг устгах"
         },
-        "profilePhoto": "Профайлын зураг",
+        "profilePhoto": "Профайл зураг",
         "email": "И-мэйл",
         "phoneNumber": "Утасны дугаар",
         "name": "Нэр",
         "language": "Хэл",
-        "theme": "Загвар",
-        "deleteAccount": "Данс устгах",
+        "theme": "Theme",
+        "deleteAccount": "Бүртгэлийг устгах",
         "termsOfService": "Үйлчилгээний нөхцөл",
         "privacyPolicy": "Нууцлалын бодлого",
-        "tracking": "Мөрдөх",
-        "account": "Данс",
-        "dataProtection": "Мэдээлэл хамгаалалт",
+        "tracking": "Хяналт",
+        "account": "Бүртгэл",
+        "dataProtection": "Мэдээллийн хамгаалалт",
+        "clearCache": "clearCache",
         "signOut": "Гарах",
-        "signedOut": "Гарсан.",
-        "cacheCleard": "Кэш цэвэрлэгдсэн.",
-        "schemeChanged": "Одоо {{selectedScheme}} горимыг ашиглаж байна.",
-        "languageChanged": "Одоо {{selectedLanguage}} хэлийг ашиглаж байна."
+        "signedOut": "Гарав.",
+        "cacheCleared": "Cache цэвэрлэгдлээ.",
+        "schemeChanged": "Одоо {{selectedScheme}} горим ашиглаж байна.",
+        "languageChanged": "Одоо {{selectedLanguage}}.",
+        "photoChanged": "Таны зураг солигдсон.",
+        "photoRemoved": "Таны зураг устгагдсан."
     },
     "AddNewLocationScreen": {
         "addNewAddress": "Шинэ хаяг нэмэх",
-        "streetName": "Гудамжны нэр болон дугаар",
-        "weThinkYoureAroundHere": "Таны байршил энд байгаа бололтой",
-        "cantFindYourAddress": "Таны хаяг олдохгүй байна уу?",
-        "useMapInstead": "Үүнийг газрын зураг ашиглан хийнэ үү"
+        "streetName": "Гудамжийн нэр ба дугаар",
+        "weThinkYoureAroundHere": "Таны одоогийн байршил",
+        "cantFindYourAddress": "Газрын зураг дээр байршил оруулах",
+        "useMapInstead": "Энд дарж байршил сонгох болон нэмэх боломжтой"
     },
     "SetupWarningScreen": {
         "configurationMissing": "Тохиргоо дутуу байна!",
-        "unconfiguredApp": "Таны апп зөв тохируулагдаагүй байна.",
-        "envMissing": "орчны тохиргооноос алга байна!"
-    }
+        "unconfiguredApp": "Тохиргоо зөв хийгдээгүй байна.",
+        "envMissing": "Шаардлагатай тохиргоо дутуу байна!"
+    },
+    "CartItemScreen": {
+        "productRemovedFromCart": "{{productName}} сагснаас устгагдсан.",
+        "failedToRemoveFromCart": "Сагснаас устгахад амжилтгүй боллоо",
+        "productUpdatedInCart": "{{productName}} сагс шинэчлэгдсэн."
+    },
+    "CartScreen": {
+        "couldNotFindItemToDelete": "Устгах барааг олж чадахгүй байна.",
+        "itemRemovedFromCart": "{{cartItemName}} сагснаас устгагдсан.",
+        "failedToRemoveItemFromCart": "Барааг сагснаас устгахад амжилтгүй боллоо.",
+        "cartIsAlreadyEmpty": "Сагс хоосон байна.",
+        "cartEmptied": "Сагс хоосон боллоо.",
+        "failedToEmptyCart": "Сагсыг хоослоход амжилтгүй боллоо.",
+        "orderItems": "Захиалгын бараанууд ({{count}})",
+        "emptyCart": "Сагсыг хоослох",
+        "checkout": "Үргэлжлүүлэх"
+    },
+    "CatalogScreen": {
+        "jumpToCart": "Худалдан авах хийх"
+    },
+    "CreateAccountScreen": {
+        "invalidPhone": "Буруу утасны дугаар байна.",
+        "createAccount": "Бүртгэл үүсгэх",
+        "sendVerificationCode": "Баталгаажуулах код илгээх",
+        "haveAccountAlreadyLogin": "Бүртгэлтэй юу? Нэвтрэх",
+        "enterYourName": "Нэрээ оруулна уу"
+    },
+    "CreateAccountVerifyScreen": {
+        "codeSent": "Кодыг {{phone}} руу илгээсэн",
+        "verifyCode": "Кодыг баталгаажуулах"
+    },
+    "DeleteAccountScreen": {
+        "deleteAccount": "Бүртгэлийг устгах",
+        "deleteAccountConfirmation": "Та бүртгэлийг бүрэн устгахдаа итгэлтэй байна уу? Энэ үйлдлийг буцаан сэргээх боломжгүй.",
+        "cancel": "Цуцлах",
+        "processingRequest": "Хүсэлтийг боловсруулж байна...",
+        "deleteMyAccount": "Тийм, бүртгэлийг устгах"
+    },
+    "DeleteAccountVerifyScreen": {
+        "accountDeleted": "Бүртгэл устгагдсан.",
+        "enterDeletionCode": "Устгах кодыг оруулна уу",
+        "deletionCodePrompt": "Баталгаажуулах кодыг таны имэйл эсвэл утас руу илгээсэн. Бүртгэл устгахыг баталгаажуулахын тулд доорх кодыг оруулна уу.",
+        "verifyCode": "Кодыг баталгаажуулах"
+    },
+    "EditAccountPropertyScreen": {
+        "changesSaved": "{{propertyName}} өөрчлөлтийг хадгалсан."
+    },
+    "EditLocationCoordScreen": {
+        "savePosition": "Байршлыг хадгалах",
+        "reset": "Сэргээх"
+    },
+    "EditLocationScreen": {
+        "addressSaved": "Хаяг хадгалагдсан.",
+        "defaultLocationUpdated": "{{locationName}} таны үндсэн хаяг боллоо.",
+        "locationWasDeleted": "{{locationName}} устгагдсан.",
+        "unableToSelectLocationType": "Хаягийн төрлийг сонгоход амжилтгүй байна.",
+        "apartment": "Орон сууц",
+        "house": "Гэр",
+        "office": "Ажлын газар",
+        "hotel": "Зочид буудал",
+        "hospital": "Эмнэлэг",
+        "school": "Сургууль",
+        "other": "Бусад",
+        "address": "Хаяг",
+        "locationType": "Байршлын төрөл",
+        "addressDetails": "Хаягийн дэлгэрэнгүй мэдээлэл",
+        "additionalAddressDetails": "Нэмэлт хаягийн дэлгэрэнгүй мэдээлэл оруулах.",
+        "addressLabel": "Хаягийн тэмдэглэл эсвэл нэр",
+        "streetAddress": "Гудамжийн хаяг ",
+        "aptSuiteUnit": "Орон сууц, Нэгж, Барилга, шат гэх мэт.",
+        "optional": "Сонгогдох",
+        "neighborhood": "Ойролцоо",
+        "city": "Хот ",
+        "postalCode": "Шуудан эсвэл ZIP код",
+        "phoneNumber": "Утасны дугаар",
+        "phoneNumberPlaceholder": "Хүргэлтийн үед холбоо барих утасны дугаар",
+        "additionalInstructions": "Нэмэлт заавар",
+        "whereExactly": "Бид яг хаана уулзах вэ?",
+        "makeDefaultAddress": "Анхдагч хаяг болгох",
+        "deleteAddress": "Хаяг устгах",
+        "saveAddress": "Хаяг хадгалах"
+    },
+    "FoodTruckScreen": {
+        "tapTrucksPrompt": "Ачааны машин дээр дарж доторх бүтээгдэхүүнийг үзнэ үү.",
+        "yourZoneIs": "Таны бүс",
+        "outOfZone": "Бүснээс гадуур байна, хүргэлт боломжгүй 🙁",
+        "truck": "Явуулын дэлгүүр"
+    },
+    "LocationPermissionScreen": {
+        "enableLocationServices": "Байршлын үйлчилгээг идэвхжүүлэх",
+        "enableLocationPrompt": "Таны байршлыг шаардаж байна.",
+        "shareAndContinue": "Байршлыг хуваалцаж үргэлжлүүлэх",
+        "locationPermissionRequired": "Байршлын зөвшөөрөл шаардлагатай",
+        "locationPermissionPrompt": "Та утсан дээрх байршилын тохиргоог идэвхжүүлнэ үү!. Хүсвэл гараар байршлыг оруулж болно.",
+        "goToSettings": "Тохиргоо руу орох",
+        "enterLocationManually": "Байршлыг гараар оруулах"
+    },
+    "LocationPickerScreen": {
+        "useMarkerPosition": " Цэнхэр маркер ашиглан байршилаа сонгох ",
+        "useExactMarkerPosition": "Газрын зураг дээр өөрийн байраа сонгон хадгалах"
+    },
+    "LoginScreen": {
+        "cacheCleared": "Cache цэвэрлэгдлээ!",
+        "loggedInWithProvider": "{{provider}}-ээр нэвтэрлээ",
+        "loginAttemptFailed": "{{provider}}-ээр нэвтрэх оролдлого амжилтгүй боллоо.",
+        "clearCache": "Cache цэвэрлэх"
+    },
+    "OrderHistoryScreen": {
+        "orderHistory": "Захиалгын түүх"
+    },
+    "AddressBookScreen": {
+        "addressBook": "Хаягийн бүртгэл"
+    },
+    "OrderScreen": {
+        "orderArrivingIn": "Захиалга {eta} хугацаанд ирнэ",
+        "orderReadyForPickup": "Таны захиалга авахад бэлэн байна",
+        "orderReadyForPickupPrompt": "Захиалгaa авсны дараа доорх баталгаажуулах товчийг дарж баталгаажуулна уу.",
+        "orderPickedUp": "Захиалгыг авсан",
+        "orderPickedUpConfirmMessage": "Таны захиалга авсан, баталгаажуулсан уу?",
+        "yes": "Тийм",
+        "confirmPickup": "Авахыг баталгаажуулах",
+        "pickupLocation": "Авахын газар",
+        "deliveryLocation": "Хүргэлтийн газар",
+        "orderNotes": "Захиалгын тэмдэглэл"
+    },
+    "CheckoutScreen": {
+        "checkout": "Үргэлжлүүлэх"
+    },
+    "PaymentMethodScreen": {},
+    "PaypalCheckoutScreen": {},
+    "PhoneLoginScreen": {
+        "invalidPhone": "Буруу утасны дугаар байна.",
+        "loginViaSms": "SMS-аар нэвтрэх",
+        "sendVerificationCode": "Баталгаажуулах код илгээх",
+        "loginUsingAnotherMethod": "Өөр аргаар нэвтрэх",
+        "createNewAccount": "Шинэ бүртгэл үүсгэх"
+    },
+    "PhoneLoginVerifyScreen": {
+        "codeSentTo": "Кодыг {{phone}} руу илгээсэн",
+        "verifyCode": "Кодыг баталгаажуулах"
+    },
+    "ProductScreen": {
+        "productAddedToCart": "{{productName}} сагсанд нэмэгдлээ.",
+        "addToCart": "Сагсанд нэмэх"
+    },
+    "ProfileScreen": {
+        "orderHistory": "Захиалгын түүх",
+        "account": "Бүртгэл",
+        "paymentMethods": "Төлбөрийн хэрэгсэл",
+        "addressBook": "Хаягийн бүртгэл",
+        "greeting": "Сайн уу, {{customerName}}!"
+    },
+    "QPayCheckoutScreen": {
+        "completingOrder": "Захиалгыг дуусгаж байна...",
+        "checkingPayment": "Төлбөрийг шалгаж байна...",
+        "yourDeliveryLocation": "Хүргэлт хийх байршил",
+        "yourCart": "Таны сагс",
+        "orderNotes": "Нэмэлт мэдээлэл (Орцны код,Хаягын заавар гэх мэт)",
+        "orderNotesTitle": "Захиалгын тэмдэглэл",
+        "enterAdditionalNotes": "Захиалгад нэмэлт тэмдэглэл оруулах",
+        "checkoutOptions": "Төрбөрийн сонголтууд"
+    },
+    "SavedLocationScreen": {
+        "addressSaved": "Хаяг хадгалагдсан.",
+        "address": "Хаяг"
+    },
+    "StoreCategoryScreen": {},
+    "StoreHomeScreen": {},
+    "StoreInfoScreen": {
+        "reviewsAndRating": "Сэтгэгдэл ба үнэлгээ"
+    },
+    "StoreMapScreen": {},
+    "StoreOnboardScreen": {},
+    "StoreSearchScreen": {
+        "searchProducts": "Бүтээгдэхүүн хайх",
+        "result": "үр дүн",
+        "foundResults": "\"{{searchQuery}}\" нь {{count}} {{result}} олдлоо",
+        "noResults": "\"{{searchQuery}}\" нь үр дүн олдсонгүй",
+        "searchPrompt": "Бүтээгдэхүүн, ангилал эсвэл бусад барааг хайх!"
+    },
+    "StripeCheckoutScreen": {
+        "yourDeliveryLocation": "Таны хүргэлтийн байршил",
+        "yourCart": "Таны сагс",
+        "yourPaymentMethod": "Таны төлбөрийн хэрэгсэл",
+        "orderNotes": "Захиалгын тэмдэглэл",
+        "orderNotesTitle": "Захиалгын тэмдэглэл",
+        "enterAdditionalNotes": "Захиалгын нэмэлт тэмдэглэл оруулах",
+        "checkoutOptions": "Төрбөр төлөх сонголтууд"
+    },
+    "StripeCustomerScreen": {
+        "manageYourPaymentMethod": "Төлбөрийн хэрэгсэлээ удирдах",
+        "loadingAccountInfo": "Бүртгэлийн мэдээллийг ачааллаж байна..."
+    },
+    "TestScreen": {},
+    "AlertPromptBox": {
+        "proceedPrompt": "Үргэлжлүүлэхдээ итгэлтэй байна уу?"
+    },
+    "Buttons": {
+        "continueWithPhone": "Утас дугаараар нэвтрэх",
+        "continueWithApple": "Apple ашиглан нэвтрэх",
+        "continueWithFacebook": "Facebook ашиглан нэвтрэх",
+        "continueWithInstagram": "Instagram ашиглан нэвтрэх",
+        "continueWithGoogle": "Google ашиглан нэвтрэх"
+    },
+    "CartContents": {
+        "updateItem": "Бүтээгдэхүүн шинэчлэх",
+        "removeFromCart": "Сагснаас устгах",
+        "removedFromCart": "{{cartItemName}} сагснаас устгагдсан.",
+        "failedToRemove": "Элемэнтийг сагснаас устгахад амжилтгүй боллоо."
+    },
+    "CheckoutButton": {
+        "checkout": "Төлбөр төлөх {{total}}",
+        "loginOrCreateAccount": "Нэвтрэх эсвэл бүртгэл үүсгэх"
+    },
+    "CheckoutPickupSwitch": {
+        "delivery": "Хүргэлт",
+        "pickup": "Авах"
+    },
+    "CheckoutTotal": {},
+    "CustomerLocationSelect": {
+        "selectAddress": "Хаяг сонгох",
+        "newAddress": "Шинэ хаяг"
+    },
+    "LocationPicker": {
+        "addNewLocation": "Шинэ хаяг нэмэх"
+    },
+    "OrderTotal": {},
+    "PhoneInput": {
+        "enterPhoneNumber": "Утасны дугаарыг оруулна уу",
+        "searchCountry": "Улс хайх"
+    },
+    "ProductCard": {
+        "productAddedToCart": "{{productName}} сагсанд нэмэгдлээ.",
+        "addToCart": "Сагсанд нэмэх"
+    },
+    "ProductOptionsForm": {
+        "chooseOneItem": "Нэг барааг сонгоно уу",
+        "selectOneItem": "Нэг барааг сонгоно уу",
+        "chooseUpToFour": "Дөрөв хүртэл барааг сонгоно уу"
+    },
+    "StoreLocationSchedule": {
+        "Monday": "Даваа",
+        "Tuesday": "Мягмар",
+        "Wednesday": "Лхагва",
+        "Thursday": "Пүрэв",
+        "Friday": "Баасан",
+        "Saturday": "Бямба",
+        "Sunday": "Ням",
+        "open24": "24 цагийн үйлчилгээг",
+        "today": "Өнөөдөр",
+        "closed": "Хаагдсан"
+    },
+    "StripeCardFieldSheet": {
+        "loadingPaymentDetails": "Төлбөрийн дэлгэрэнгүй мэдээллийг ачааллаж байна...",
+        "addNewPaymentMethod": "Шинэ төлбөрийн хэрэгсэл нэмэх",
+        "cardEndingIn": "Картын дуусах хэсэг {{label}}",
+        "change": "Өөрчлөх",
+        "addOrUpdatePaymentMethod": "Төлбөрийн хэрэгсэл нэмэх / шинэчлэх",
+        "saving": "Хадгалж байна...",
+        "savePaymentMethod": "Төлбөрийн хэрэгсэл хадгалах"
+    },
+    "StripePaymentSheet": {
+        "loginToCheckout": "Үргэлжлүүлэхийн тулд нэвтэрнэ үү",
+        "loadingPaymentDetails": "Төлбөрийн дэлгэрэнгүй мэдээллийг ачааллаж байна...",
+        "addNewPaymentMethod": "Шинэ төлбөрийн хэрэгсэл нэмэх",
+        "cardEndingIn": "Картын дуусах хэсэг {{label}}",
+        "change": "Өөрчлөх"
+    },
+    "QPayPaymentSheet": {
+        "unableToOpenBank": "Банкны аппыг нээж чадахгүй.",
+        "selectBank": "Банк сонгох"
+    },
+    "TextAreaSheet": {}
 }
