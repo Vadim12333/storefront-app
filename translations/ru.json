@@ -1,0 +1,379 @@
+{
+    "Account": {
+        "AccountScreen": {
+            "title": "Создать аккаунт или войти",
+            "loginButtonText": "Войти",
+            "createAccountButtonText": "Создать аккаунт",
+            "userGreetingTitle": "Здравствуйте, {{customerName}}",
+            "accountMenuTitle": "Мой аккаунт",
+            "profileLinkText": "Профиль",
+            "ordersLinkText": "Заказы",
+            "placesLinkText": "Места",
+            "signoutButtonText": "Выйти"
+        },
+        "ChangePasswordScreen": {
+            "title": "Изменить пароль"
+        },
+        "EditProfileScreen": {
+            "title": "Ваш профиль",
+            "nameLabelText": "Ваше имя",
+            "emailLabelText": "Ваш адрес электронной почты",
+            "phoneLabelText": "Ваш номер мобильного телефона",
+            "saveButtonText": "Сохранить профиль"
+        },
+        "OrderHistoryScreen": {
+            "title": "Ваши заказы",
+            "emptyStateText": "Похоже, вы еще не делали заказов.",
+            "bodyTitle": "У вас нет заказов",
+            "bodyTitleLoading": "Загрузка истории ваших заказов"
+        },
+        "SavedPlacesScreen": {
+            "title": "Ваши сохраненные места",
+            "loadingYourSavedPlaces": "Загрузка ваших сохраненных мест",
+            "youHaveNoSavedPlaces": "У вас нет сохраненных мест",
+            "emptyStateText": "Похоже, вы не сохранили ни одного адреса.",
+            "addNewAddress": "Добавить новый адрес"
+        }
+    },
+    "Auth": {
+        "CreateAccountScreen": {
+            "title": "Создать аккаунт",
+            "greetingTitle": "Здравствуйте и добро пожаловать в {{infoName}}.",
+            "greetingSubtitle": "Создайте свой аккаунт, указав только свой телефон и имя ниже",
+            "sendVerificationCodeButtonText": "Отправить код подтверждения",
+            "awaitingVerificationTitle": "Спасибо, {{name}}!",
+            "awaitingVerificationSubtitle": "Теперь вы должны получить код на свой телефон по SMS, подтвердите код, чтобы создать свой аккаунт!",
+            "retryButtonText": "Повторить?",
+            "verifyCodeButtonText": "Подтвердить код",
+            "codeInputPlaceholder": "Введите код подтверждения",
+            "nameInputPlaceholder": "Ваше имя"
+        },
+        "LoginScreen": {
+            "title": "Войти",
+            "sendVerificationCodeButtonText": "Отправить код подтверждения",
+            "createAccountButtonText": "или Создать аккаунт",
+            "retryButtonText": "Повторить?",
+            "verifyCodeButtonText": "Подтвердить код",
+            "codeInputPlaceholder": "Введите код подтверждения"
+        }
+    },
+    "Browser": {
+        "CategoryScreen": {},
+        "HomeScreen": {
+            "categoryPickerHeaderTitle": "Поиск по категории"
+        },
+        "ProductScreen": {
+            "updateInCartActionText": "Обновить в корзине",
+            "addAnotherActionText": "Добавить еще",
+            "addToCartActionText": "Добавить в корзину",
+            "basePriceLabel": "Базовая цена",
+            "optionalAddonLabel": "Необязательно, максимум {{addonsCount}}",
+            "hasItemsAlertTitle": "В корзине есть товары!",
+            "hasItemsAlertDecription": "В вашей корзине уже есть товары из другого магазина, если вы продолжите, ваша корзина будет очищена.",
+            "hasItemsAlertCancelActionText": "Отмена",
+            "hasItemsAlertContinueActionText": "Продолжить",
+            "displayBookingDetailsTitle": "Ваше бронирование",
+            "displayBookingDateLabelText": "Дата",
+            "displayBookingTimeLabelText": "Время",
+            "confirmBookingActionSheetTitle": "Подтвердите дату и время бронирования",
+            "confirmBookingActionSheetDateLabelText": "Дата",
+            "confirmBookingActionSheetTimeLabelText": "Время",
+            "confirmBookingActionSheetButtonText": "Подтвердить бронирование",
+            "viewProductMediaTitle": "Просмотр медиафайлов",
+            "serviceIdentifierText": "(Услуга)",
+            "youtubeVidsSectionTitle": "Видео на YouTube",
+            "updateBookingActionText": "Обновить бронирование",
+            "addAnotherBookingActionText": "Забронировать еще",
+            "bookServiceActionText": "Заказать услугу"
+        }
+    },
+    "Cart": {
+        "components": {
+            "CartCheckoutPanel": {
+                "cartTotalLabelText": "Итого",
+                "checkoutButtonText": "Оформить заказ"
+            },
+            "CartFooter": {
+                "optionsLabelText": "Опции",
+                "pickupOrderLabelText": "Забрать заказ",
+                "askTipLabelText": "Оставить чаевые",
+                "askDeliveryTipLabelText": "Чаевые за доставку",
+                "costLabelText": "Стоимость",
+                "deliveryFeeLabelText": "Стоимость доставки",
+                "tipLabelText": "Чаевые",
+                "deliveryTipLabelText": "Чаевые за доставку",
+                "cartSubtotalLabelText": "Промежуточный итог",
+                "cartTotalLabelText": "Итого"
+            },
+            "CartHeader": {
+                "title": "{{cartItemsCount}} товаров в вашей корзине",
+                "multiCartVendorsSubtitle": "из {{storeCount}} магазинов",
+                "removeAllItemsButtonText": "Удалить все товары",
+                "cartSummaryLabelText": "Сумма корзины",
+                "addMoreButtonText": "Добавить еще"
+            }
+        },
+        "CartScreen": {
+            "reloadCartButtonText": "Перезагрузить корзину",
+            "emptyStateTitle": "Ваша корзина пуста",
+            "emptyStateSubtitle": "Похоже, вы еще ничего не добавили в корзину.",
+            "goToBrowserButtonText": "Начать покупки",
+            "quantityExplenation": "(каждый {{cost}})"
+        },
+        "CheckoutScreen": {
+            "gatewayDetails": {
+                "cash": {
+                    "title": "Наличные",
+                    "description": "Оплата наличными при доставке или самовывозе"
+                },
+                "stripe": {
+                    "title": "Stripe",
+                    "description": "Оплата картой, на платформе Stripe"
+                },
+                "qpay": {
+                    "title": "QPay",
+                    "description": "Оплата банковским переводом QPay"
+                }
+            },
+            "selectPaymentMethodActionSheetTitle": "Выберите способ оплаты",
+            "checkoutLabelText": "Оформить заказ",
+            "loginToCheckoutWarningText": "Вы должны войти или зарегистрироваться, чтобы оформить заказ",
+            "loginButtonText": "Войти",
+            "addressLabelText": "Адрес доставки",
+            "selectAddressLabelText": "Выберите место доставки",
+            "paymentMethodLabelText": "Способ оплаты",
+            "selectPaymentMethodLabelText": "Выберите способ оплаты",
+            "cashGatewayName": "Наличные",
+            "noPaymentMethodLabelText": "Нет способа оплаты",
+            "cartLabelText": "Корзина ({{cartUniqueItemsCount}})",
+            "orderSummaryLabelText": "Сумма заказа",
+            "subtotalLabelText": "Промежуточный итог",
+            "deliveryFeeLabelText": "Стоимость доставки",
+            "tipLabelText": "Чаевые",
+            "deliveryTipLabelText": "Чаевые за доставку",
+            "orderTotalLabelText": "Итоговая сумма заказа",
+            "submitOrderButtonText": "Разместить заказ",
+            "confirmButtonText": "Подтвердить"
+        }
+    },
+    "Core": {
+        "BootScreen": {},
+        "NetworkScreen": {},
+        "StorefrontScreen": {}
+    },
+    "Exceptions": {
+        "SetupWarningScreen": {
+            "title": "Отсутствуют настройки!",
+            "subtitle": "Похоже, ваше приложение неправильно настроено.",
+            "envMissingText": "отсутствует в окружении!"
+        }
+    },
+    "Network": {
+        "ExploreScreen": {
+            "searchPlaces": "Поиск мест"
+        },
+        "MapScreen": {
+            "searchPlaces": "Поиск мест"
+        },
+        "NetworkCategoryScreen": {},
+        "StoreScreen": {
+            "loadingText": "Загрузка...",
+            "displayHoursToggleText": "Часы работы",
+            "displayHoursTodayLabel": "Сегодня",
+            "weekdayMonday": "Понедельник",
+            "weekdayTuesday": "Вторник",
+            "weekdayWednesday": "Среда",
+            "weekdayThursday": "Четверг",
+            "weekdayFriday": "Пятница",
+            "weekdaySaturday": "Суббота",
+            "weekdaySunday": "Воскресенье",
+            "shareStoreTitleText": "{{storeName}} найден в {{networkName}}",
+            "shareStoreSubjectText": "{{storeName}} найден в {{networkName}}",
+            "shareStoreMessageText": "Эй, посмотри, что я нашел в {{networkName}}! Зацени {{storeName}}!",
+            "photosButtonText": "Фото",
+            "reviewsButtonText": "Отзывы",
+            "mapButtonText": "Карта",
+            "websiteButtonText": "Веб-сайт",
+            "contactButtonText": "Контакт",
+            "shareButtonText": "Поделиться",
+            "searchButtonText": "Поиск",
+            "browseButtonText": "Просмотр",
+            "contactActionSheetTitle": "Связаться с {{storeName}}",
+            "contactActionSheetCallActionButtonText": "Позвонить {{phone}}",
+            "contactActionSheetEmailActionButtonText": "Написать {{email}}",
+            "contactActionSheetFacebookActionButtonText": "Facebook",
+            "contactActionSheetInstagramActionButtonText": "Instagram",
+            "contactActionSheetTwitterActionButtonText": "Twitter",
+            "serviceIndicatorText": "(Услуга)",
+            "descriptionMissing": "Нет описания",
+            "closed": "Закрыто"
+        }
+    },
+    "Places": {
+        "EditPlaceScreen": {
+            "title": "Сохранить новое место",
+            "name": "Название",
+            "namePlaceholder": "например, Дом / Работа / Учеба",
+            "streetAddress": "Улица и номер дома или а/я",
+            "streetAddress2": "Квартира, офис, блок, здание, этаж и т. д.",
+            "city": "Город",
+            "state": "Штат или область",
+            "postalCode": "Почтовый индекс",
+            "country": "Страна",
+            "phoneNumber": "Номер телефона",
+            "savePlaceDetails": "Сохранить детали места",
+            "makeDefault": "Сделать по умолчанию",
+            "deletePlace": "Удалить место"
+        },
+        "SearchPlacesScreen": {
+            "title": "Добавить новое место",
+            "enterAddress": "Введите адрес...",
+            "currentLocationLabel": "Текущее местоположение"
+        }
+    },
+    "Shared": {
+        "OrderCompletedScreen": {
+            "title": "Заказ получен!",
+            "pickupOrderFrom": "Забрать заказ из",
+            "orderNotes": "Примечания к заказу",
+            "qrCode": "QR-код",
+            "orderSummary": "Сумма заказа",
+            "cash": "Наличные",
+            "subtotal": "Промежуточный итог",
+            "deliveryFee": "Стоимость доставки",
+            "tip": "Чаевые",
+            "deliveryTip": "Чаевые за доставку",
+            "total": "Итого"
+        },
+        "OrderScreen": {
+            "title": "Заказ {{orderStatus}}",
+            "arrivingIn": "Прибудет через {{estimatedDuration}}",
+            "pickupOrderFrom": "Забрать заказ из",
+            "orderNotes": "Примечания к заказу",
+            "qrCode": "QR-код",
+            "orderSummary": "Сумма заказа",
+            "cash": "Наличные",
+            "subtotal": "Промежуточный итог",
+            "deliveryFee": "Стоимость доставки",
+            "tip": "Чаевые",
+            "deliveryTip": "Чаевые за доставку",
+            "total": "Итого"
+        },
+        "StoreLocationScreen": {
+            "hideDirections": "Скрыть маршрут",
+            "displayDirections": "Показать маршрут",
+            "focusOn": "Перейти к {{storeName}}",
+            "call": "Позвонить",
+            "from": "От:",
+            "to": "До:",
+            "distance": "Расстояние:",
+            "km": "км",
+            "duration": "Продолжительность:",
+            "min": "мин",
+            "loading": "Загрузка..."
+        },
+        "StorePhotosScreen": {
+            "title": "Фото ({{storeMediaCount}})",
+            "viewingPhoto": "Просмотр фото"
+        },
+        "StoreReviewsScreen": {
+            "title": "Отзывы о {{storeName}}",
+            "overallRating": "Общий рейтинг",
+            "review": "отзыв",
+            "reviews": "отзывы",
+            "writeAReview": "Написать отзыв",
+            "createdAgo": "{{reviewCreatedAgo}} назад",
+            "sort": "Сортировать",
+            "filter": "Фильтр",
+            "starRatings": "Рейтинг {{filter}} звезд",
+            "actionSheetTitle": "{{action}} отзывы",
+            "filterOptionText": "{{rating}} звезд",
+            "allRatings": "Все рейтинги",
+            "newestFirst": "Сначала новые",
+            "oldestFirst": "Сначала старые",
+            "highestRated": "Сначала с самым высоким рейтингом",
+            "lowestRated": "Сначала с самым низким рейтингом",
+            "defaultSortOption": "Сортировка {{networkName}}"
+        },
+        "WriteReviewScreen": {
+            "loginToReviewWarningText": "Вы должны войти или зарегистрироваться, чтобы оставить отзыв",
+            "login": "Войти",
+            "selectYourRating": "Выберите свой рейтинг",
+            "submitReview": "Отправить отзыв"
+        }
+    },
+    "components": {
+        "interface": {
+            "headers": {
+                "NetworkHeader": {
+                    "search": "Поиск"
+                },
+                "StorefrontHeader": {}
+            },
+            "CartSubtotalView": {},
+            "CartTotalView": {},
+            "CategoryProductSlider": {},
+            "LocationPicker": {
+                "enterDeliveryLocation": "Введите место доставки",
+                "enterAddress": "Введите адрес...",
+                "selectDeliveryLocation": "Выберите место доставки",
+                "tapToAddNewDeliveryLocation": "Нажмите, чтобы добавить новое место доставки",
+                "tapToChange": "Нажмите, чтобы изменить",
+                "tapToAddDeliveryLocation": "Нажмите, чтобы добавить место доставки",
+                "deliverTo": "Доставить в:",
+                "selectLocation": "Выберите местоположение",
+                "currentLocation": "Текущее местоположение"
+            },
+            "LangPicker": {
+                "title": "Выберите язык"
+            },
+            "NetworkCategoryBlock": {
+                "categories": "Категории"
+            },
+            "NetworkSearch": {
+                "searching": "Поиск...",
+                "noDescription": "Нет описания"
+            },
+            "PhoneInput": {
+                "selectCountry": "Выберите страну"
+            },
+            "ProductPriceView": {},
+            "ProductCard": {
+                "serviceIndicator": "(Услуга)",
+                "unavailable": "Недоступно"
+            },
+            "ServiceQuoteFeeView": {},
+            "StoreCategoryPicker": {
+                "viewCategories": "Просмотр категорий",
+                "categories": "Категории"
+            },
+            "StorePicker": {},
+            "StoreSearch": {
+                "inputPlaceholderText": "Поиск {{storeName}}"
+            },
+            "TipInput": {},
+            "TipView": {},
+            "ExploreBar": {
+                "clearAllFilters": "Очистить все фильтры",
+                "map": "Карта",
+                "nearestFirst": "Сначала ближайшие",
+                "highestRated": "Сначала с самым высоким рейтингом",
+                "lowestRated": "Сначала с самым низким рейтингом",
+                "newestFirst": "Сначала новые",
+                "oldestFirst": "Сначала старые",
+                "mostPopular": "Самые популярные",
+                "trending": "В тренде"
+            }
+        },
+        "widgets": {
+            "StoreReviewsWidget": {
+                "title": "Рекомендуемые отзывы",
+                "overallRating": "Общий рейтинг",
+                "review": "отзыв",
+                "reviews": "отзывы",
+                "writeAReview": "Написать отзыв",
+                "createdAgo": "{{reviewCreatedAgo}} назад",
+                "sort": "Сортировать",
+                "filter": "Фильтр",
+                "starRatings": "Рейтинг {{filter}} звезд",
+                "actionSheetTitle": "{{action}}
